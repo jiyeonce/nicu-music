@@ -210,9 +210,10 @@ h1 span{color:var(--dusty-pink)}
   display:none;position:fixed;bottom:0;left:0;right:0;
   background:rgba(255,248,240,.96);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
   border-top:1px solid rgba(200,160,140,.25);
-  padding:.75rem 3.5rem .75rem 1rem;
-  align-items:center;gap:10px;z-index:100;min-height:60px;
+  padding:.6rem 3.5rem .6rem 1rem;
+  flex-direction:column;gap:6px;z-index:100;
 }
+.np-top{display:flex;align-items:center;gap:10px}
 .np-thumb{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:17px;background:#FFE4CC;flex-shrink:0}
 .np-info{flex:1;min-width:0}
 .np-name{font-size:13px;font-weight:500;color:var(--text-dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -225,6 +226,25 @@ h1 span{color:var(--dusty-pink)}
 .np-bar:nth-child(4){height:17px;animation-delay:.1s}
 .np-bar:nth-child(5){height:9px;animation-delay:.25s}
 @keyframes wave{0%,100%{transform:scaleY(1)}50%{transform:scaleY(.4)}}
+
+/* 진행 바 */
+.np-progress-row{display:flex;align-items:center;gap:8px;padding:0 2px}
+.np-time{font-size:10px;color:var(--text-light);flex-shrink:0;min-width:30px;text-align:center}
+.np-seek{
+  flex:1;-webkit-appearance:none;appearance:none;
+  height:3px;border-radius:2px;outline:none;cursor:pointer;
+  background:linear-gradient(to right,#C97B7B 0%,#C97B7B 0%,rgba(200,160,140,.25) 0%);
+}
+.np-seek::-webkit-slider-thumb{
+  -webkit-appearance:none;width:14px;height:14px;border-radius:50%;
+  background:#C97B7B;cursor:pointer;transition:transform .15s;
+  box-shadow:0 1px 4px rgba(201,123,123,.4);
+}
+.np-seek::-webkit-slider-thumb:active{transform:scale(1.3)}
+.np-seek::-moz-range-thumb{
+  width:14px;height:14px;border-radius:50%;border:none;
+  background:#C97B7B;cursor:pointer;
+}
 
 /* ── REACTIONS ── */
 .reactions-section{padding:.5rem 1rem}
@@ -496,15 +516,23 @@ h1 span{color:var(--dusty-pink)}
 
   <!-- ─── 재생 중 바 ─── -->
   <div class="now-playing" id="now-playing">
-    <div class="np-thumb" id="np-thumb">🎵</div>
-    <div class="np-info">
-      <div class="np-name" id="np-name">—</div>
-      <div class="np-sub" id="np-sub">재생 중</div>
+    <div class="np-top">
+      <div class="np-thumb" id="np-thumb">🎵</div>
+      <div class="np-info">
+        <div class="np-name" id="np-name">—</div>
+        <div class="np-sub" id="np-sub">재생 중</div>
+      </div>
+      <div class="np-wave">
+        <div class="np-bar"></div><div class="np-bar"></div>
+        <div class="np-bar"></div><div class="np-bar"></div>
+        <div class="np-bar"></div>
+      </div>
     </div>
-    <div class="np-wave">
-      <div class="np-bar"></div><div class="np-bar"></div>
-      <div class="np-bar"></div><div class="np-bar"></div>
-      <div class="np-bar"></div>
+    <div class="np-progress-row">
+      <span class="np-time" id="np-cur">0:00</span>
+      <input class="np-seek" id="np-seek" type="range" min="0" max="100" value="0" step="0.1"
+             oninput="seekTrack(this.value)">
+      <span class="np-time" id="np-dur">0:00</span>
     </div>
   </div>
 </div>
@@ -677,15 +705,77 @@ function markDownloaded(i) {
   setTimeout(() => renderTracks(), 400);
 }
 
+/* ─── 트랙 오디오 플레이어 ─── */
+const player = new Audio();
+
+function fmtTime(s) {
+  if (isNaN(s)) return '0:00';
+  const m = Math.floor(s / 60);
+  const sec = Math.floor(s % 60);
+  return m + ':' + String(sec).padStart(2, '0');
+}
+
+// 재생 중 진행 바 & 시간 업데이트
+player.addEventListener('timeupdate', () => {
+  if (!player.duration) return;
+  const pct = (player.currentTime / player.duration) * 100;
+  const seek = document.getElementById('np-seek');
+  if (seek) {
+    seek.value = pct;
+    seek.style.background = `linear-gradient(to right,#C97B7B ${pct}%,rgba(200,160,140,.25) ${pct}%)`;
+  }
+  const cur = document.getElementById('np-cur');
+  if (cur) cur.textContent = fmtTime(player.currentTime);
+});
+
+// 곡 로드 완료 시 총 시간 표시
+player.addEventListener('loadedmetadata', () => {
+  const dur = document.getElementById('np-dur');
+  if (dur) dur.textContent = fmtTime(player.duration);
+});
+
+player.addEventListener('ended', () => {
+  playingIdx = -1;
+  renderTracks();
+  document.getElementById('now-playing').style.display = 'none';
+  const seek = document.getElementById('np-seek');
+  if (seek) { seek.value = 0; seek.style.background = 'rgba(200,160,140,.25)'; }
+});
+
+function seekTrack(val) {
+  if (player.duration) {
+    player.currentTime = (val / 100) * player.duration;
+  }
+}
+
 function playTrack(idx) {
-  playingIdx = (playingIdx === idx) ? -1 : idx;
+  if (playingIdx === idx) {
+    if (player.paused) {
+      player.play().catch(() => {});
+      playingIdx = idx;
+    } else {
+      player.pause();
+      playingIdx = -1;
+    }
+  } else {
+    player.pause();
+    player.src = TRACKS[idx].file;
+    player.play().catch(() => {});
+    playingIdx = idx;
+    // 시간 초기화
+    const seek = document.getElementById('np-seek');
+    if (seek) { seek.value = 0; seek.style.background = 'rgba(200,160,140,.25)'; }
+    const cur = document.getElementById('np-cur');
+    if (cur) cur.textContent = '0:00';
+  }
+
   renderTracks();
   const np = document.getElementById('now-playing');
   if (playingIdx >= 0) {
     np.style.display = 'flex';
     document.getElementById('np-thumb').textContent = TRACKS[idx].emoji;
     document.getElementById('np-name').textContent  = TRACKS[idx].name;
-    document.getElementById('np-sub').textContent   = TRACKS[idx].author + ' · ' + TRACKS[idx].duration;
+    document.getElementById('np-sub').textContent   = TRACKS[idx].author || '재생 중';
   } else {
     np.style.display = 'none';
   }
