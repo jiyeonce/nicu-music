@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>우리의 음악작업실</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600&family=Noto+Sans+KR:wght@300;400;500&display=swap');
+
+/* ── RESET & BASE ── */
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{width:100%;overflow-x:hidden;scroll-behavior:smooth}
+:root{
+  --cream:#FFF8F0;--peach:#FFE4CC;--blush:#FFD6D6;--sage:#D4E8D0;
+  --warm-brown:#8B5A3C;--soft-teal:#5B9B8E;--dusty-pink:#C97B7B;
+  --text-dark:#3D2B1F;--text-mid:#6B4E3D;--text-light:#A08070;
+}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--cream);color:var(--text-dark);min-height:100vh}
+
+/* ── BGM BUTTON ── */
+#bgm-toggle{
+  position:fixed;bottom:1.2rem;right:1.2rem;z-index:200;
+  width:44px;height:44px;border-radius:50%;
+  background:linear-gradient(135deg,#C97B7B,#E8A89A);
+  border:none;color:#fff;font-size:18px;cursor:pointer;
+  box-shadow:0 3px 14px rgba(201,123,123,.4);
+  display:flex;align-items:center;justify-content:center;
+  transition:transform .2s;
+}
+#bgm-toggle:active{transform:scale(.92)}
+#bgm-toggle.playing{animation:bgmPulse 2s infinite}
+@keyframes bgmPulse{0%,100%{box-shadow:0 3px 14px rgba(201,123,123,.4)}50%{box-shadow:0 3px 22px rgba(201,123,123,.7)}}
+
+/* ── LANDING ── */
+#landing{
+  min-height:100vh;min-height:100dvh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:1.5rem 1rem 2rem;position:relative;text-align:center;
+  background:linear-gradient(160deg,#FFF8F0 0%,#FFE8D8 50%,#FFD6E8 100%);
+  overflow:hidden;
+}
+#landing::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background-image:
+    radial-gradient(circle at 20% 20%,rgba(255,200,180,.3) 0%,transparent 50%),
+    radial-gradient(circle at 80% 80%,rgba(180,220,210,.3) 0%,transparent 50%);
+}
+
+.visitor-badge{
+  position:absolute;top:1rem;right:1rem;
+  background:rgba(255,255,255,.75);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  border:1px solid rgba(200,160,140,.3);border-radius:20px;
+  padding:.35rem .9rem;font-size:11px;color:var(--text-mid);
+  display:flex;align-items:center;gap:5px;z-index:2;
+}
+.visitor-dot{width:6px;height:6px;border-radius:50%;background:#5B9B8E;flex-shrink:0;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(1.3)}}
+
+.note-float{position:absolute;font-size:16px;opacity:0;animation:floatNote 4s ease-in-out infinite;pointer-events:none;z-index:1}
+@keyframes floatNote{0%{opacity:0;transform:translateY(0) rotate(-10deg)}20%{opacity:.7}80%{opacity:.4}100%{opacity:0;transform:translateY(-55px) rotate(10deg)}}
+
+/* ── SCENE SVG ── */
+.scene-wrap{
+  position:relative;width:min(360px,85vw);margin:0 auto 1.8rem;
+  animation:fadeUp .9s .2s ease both;opacity:0;
+}
+.scene-wrap svg{width:100%;height:auto;display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+
+.title-area{position:relative;z-index:2;animation:fadeUp .9s ease both}
+.subtitle-tag{
+  display:inline-block;background:rgba(91,155,142,.15);color:var(--soft-teal);
+  font-size:10px;letter-spacing:2px;padding:4px 12px;border-radius:20px;
+  margin-bottom:.75rem;border:1px solid rgba(91,155,142,.3);
+}
+h1{font-family:'Noto Serif KR',serif;font-size:clamp(1.6rem,7vw,2.8rem);font-weight:600;color:var(--text-dark);line-height:1.3;margin-bottom:.4rem}
+h1 span{color:var(--dusty-pink)}
+.tagline{font-size:13px;color:var(--text-light);margin-bottom:2rem;line-height:1.9}
+.enter-btn{
+  background:linear-gradient(135deg,#C97B7B,#E8A89A);color:#fff;border:none;
+  padding:.85rem 2.2rem;border-radius:50px;
+  font-family:'Noto Sans KR',sans-serif;font-size:15px;font-weight:500;
+  cursor:pointer;letter-spacing:.5px;transition:all .25s;
+  box-shadow:0 4px 18px rgba(201,123,123,.35);min-height:48px;
+}
+.enter-btn:active{transform:scale(.97)}
+
+/* ── ALBUM PAGE ── */
+#album{display:none;min-height:100vh;background:var(--cream);padding-bottom:100px}
+
+.album-header{
+  background:linear-gradient(135deg,#FFE4CC 0%,#FFD6E8 100%);
+  padding:3.2rem 1.2rem 1.2rem;text-align:center;
+  border-bottom:1px solid rgba(200,160,140,.2);position:relative;
+}
+.back-btn{
+  position:absolute;left:.9rem;top:.9rem;
+  background:rgba(255,255,255,.65);border:1px solid rgba(200,160,140,.3);
+  border-radius:20px;padding:6px 14px;font-size:12px;color:var(--text-mid);
+  cursor:pointer;font-family:'Noto Sans KR',sans-serif;min-height:36px;
+}
+.album-title{font-family:'Noto Serif KR',serif;font-size:clamp(1.2rem,5vw,1.6rem);color:var(--text-dark);margin-bottom:.25rem}
+.album-sub{font-size:11px;color:var(--text-light);letter-spacing:.5px}
+
+/* ── PHOTO GALLERY ── */
+.gallery-section{padding:1.2rem 1rem .8rem}
+.section-label{font-size:10px;letter-spacing:2px;color:var(--text-light);margin-bottom:.8rem;text-transform:uppercase}
+
+.gallery-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:6px;
+}
+@media(min-width:480px){.gallery-grid{gap:10px}}
+
+.gallery-item{
+  aspect-ratio:1/1;border-radius:12px;overflow:hidden;cursor:pointer;
+  position:relative;background:var(--peach);
+  transition:transform .2s,box-shadow .2s;
+}
+.gallery-item:active{transform:scale(.97)}
+.gallery-item img{
+  width:100%;height:100%;object-fit:cover;
+  transition:transform .4s ease;display:block;
+}
+.gallery-item:hover img{transform:scale(1.06)}
+.gallery-item::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(to bottom,transparent 50%,rgba(61,43,31,.25));
+  opacity:0;transition:opacity .3s;
+}
+.gallery-item:hover::after{opacity:1}
+
+/* ── LIGHTBOX ── */
+#lightbox{
+  display:none;position:fixed;inset:0;z-index:300;
+  background:rgba(30,15,10,.88);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  align-items:center;justify-content:center;padding:1rem;
+}
+#lightbox.open{display:flex}
+#lightbox img{
+  max-width:min(90vw,600px);max-height:85vh;
+  border-radius:16px;object-fit:contain;
+  box-shadow:0 20px 60px rgba(0,0,0,.5);
+  animation:lbIn .25s ease;
+}
+@keyframes lbIn{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
+.lb-close{
+  position:absolute;top:1rem;right:1rem;
+  background:rgba(255,255,255,.18);border:none;color:#fff;
+  font-size:22px;width:40px;height:40px;border-radius:50%;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+}
+.lb-nav{
+  position:absolute;top:50%;transform:translateY(-50%);
+  background:rgba(255,255,255,.18);border:none;color:#fff;
+  font-size:20px;width:40px;height:40px;border-radius:50%;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+}
+.lb-prev{left:1rem}
+.lb-next{right:1rem}
+
+/* ── TRACKS ── */
+.tracks-section{padding:.4rem 1rem .5rem}
+.track-item{
+  display:flex;align-items:center;gap:10px;
+  padding:11px 12px;background:#fff;border-radius:14px;margin-bottom:8px;
+  border:1px solid rgba(200,160,140,.15);cursor:pointer;
+  position:relative;overflow:hidden;transition:border-color .2s;min-height:64px;
+}
+.track-item::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:linear-gradient(180deg,#C97B7B,#FFB8A0);border-radius:3px 0 0 3px;
+  opacity:0;transition:opacity .25s;
+}
+.track-item:active{background:#FFF5F0}
+.track-item.playing{background:linear-gradient(135deg,#FFF5F0,#FFF8FC)}
+.track-item.playing::before{opacity:1}
+.track-num{width:20px;text-align:center;font-size:11px;color:var(--text-light);flex-shrink:0}
+.track-thumb{
+  width:40px;height:40px;border-radius:10px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:18px;
+}
+.track-info{flex:1;min-width:0}
+.track-name{font-size:13px;font-weight:500;color:var(--text-dark);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.track-desc{font-size:11px;color:var(--text-light);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.track-dur{font-size:11px;color:var(--text-light);flex-shrink:0;display:none}
+@media(min-width:360px){.track-dur{display:block}}
+.play-icon{
+  width:30px;height:30px;border-radius:50%;
+  background:linear-gradient(135deg,#C97B7B,#E8A89A);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.play-icon svg{width:11px;height:11px;fill:#fff;margin-left:2px}
+.play-icon.pause-icon svg{margin-left:0}
+.dl-btn{
+  width:30px;height:30px;border-radius:50%;flex-shrink:0;
+  background:var(--cream);border:1.5px solid rgba(200,160,140,.3);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all .2s;text-decoration:none;
+}
+.dl-btn:hover{background:#FFF0E8;border-color:rgba(201,123,123,.4)}
+.dl-btn:active{transform:scale(.92)}
+.dl-btn svg{width:13px;height:13px;fill:none;stroke:#C97B7B;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.dl-btn.done svg{stroke:#5B9B8E}
+.dl-btn.done{border-color:rgba(91,155,142,.4);background:#F0F8F5}
+
+/* ── NOW PLAYING BAR ── */
+.now-playing{
+  display:none;position:fixed;bottom:0;left:0;right:0;
+  background:rgba(255,248,240,.96);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-top:1px solid rgba(200,160,140,.25);
+  padding:.75rem 3.5rem .75rem 1rem;
+  align-items:center;gap:10px;z-index:100;min-height:60px;
+}
+.np-thumb{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:17px;background:#FFE4CC;flex-shrink:0}
+.np-info{flex:1;min-width:0}
+.np-name{font-size:13px;font-weight:500;color:var(--text-dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.np-sub{font-size:11px;color:var(--text-light)}
+.np-wave{display:flex;align-items:center;gap:2px;height:18px;flex-shrink:0}
+.np-bar{width:3px;background:linear-gradient(180deg,#C97B7B,#FFB8A0);border-radius:2px;animation:wave .8s ease-in-out infinite}
+.np-bar:nth-child(1){height:8px;animation-delay:0s}
+.np-bar:nth-child(2){height:15px;animation-delay:.15s}
+.np-bar:nth-child(3){height:11px;animation-delay:.3s}
+.np-bar:nth-child(4){height:17px;animation-delay:.1s}
+.np-bar:nth-child(5){height:9px;animation-delay:.25s}
+@keyframes wave{0%,100%{transform:scaleY(1)}50%{transform:scaleY(.4)}}
+
+/* ── REACTIONS ── */
+.reactions-section{padding:.5rem 1rem}
+.reactions-box,.comments-box{background:#fff;border-radius:16px;padding:1rem;border:1px solid rgba(200,160,140,.15)}
+.reactions-title,.comments-title{font-size:11px;color:var(--text-light);margin-bottom:.9rem;letter-spacing:1px}
+.emoji-row{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:1rem}
+.emoji-btn{
+  display:flex;align-items:center;gap:5px;
+  background:var(--cream);border:1.5px solid rgba(200,160,140,.2);
+  border-radius:20px;padding:7px 12px;cursor:pointer;
+  transition:all .2s;font-family:'Noto Sans KR',sans-serif;font-size:12px;min-height:36px;
+}
+.emoji-btn:active{transform:scale(.95)}
+.emoji-btn.active{background:#FFF0E8;border-color:#C97B7B}
+.emoji-btn .emo{font-size:15px}
+.emoji-count{font-size:11px;color:var(--text-mid);font-weight:500}
+.heart-area{display:flex;align-items:center;justify-content:center;gap:14px;padding-top:.3rem}
+.heart-btn{
+  background:linear-gradient(135deg,#FFB8B8,#FFCCE0);border:none;border-radius:50px;
+  padding:10px 24px;font-size:22px;cursor:pointer;
+  box-shadow:0 2px 10px rgba(255,120,120,.22);min-height:48px;
+}
+.heart-btn:active{transform:scale(.94)}
+.heart-btn.boom{animation:heartBoom .35s ease}
+@keyframes heartBoom{0%{transform:scale(1)}50%{transform:scale(1.3)}100%{transform:scale(1)}}
+.heart-count{font-size:15px;color:var(--dusty-pink);font-weight:500}
+
+/* ── COMMENTS ── */
+.comments-section{padding:.5rem 1rem 1.5rem}
+.comment-input-wrap{display:flex;gap:8px;margin-bottom:1rem;align-items:flex-start}
+.comment-avatar{
+  width:32px;height:32px;border-radius:50%;
+  background:linear-gradient(135deg,#FFB8A0,#FFD6D6);
+  flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;margin-top:2px;
+}
+.input-col{flex:1;display:flex;flex-direction:column;gap:7px}
+.comment-input{
+  width:100%;border:1.5px solid rgba(200,160,140,.25);border-radius:12px;
+  padding:9px 12px;font-family:'Noto Sans KR',sans-serif;font-size:13px;
+  color:var(--text-dark);background:var(--cream);resize:none;outline:none;
+  transition:border-color .2s;-webkit-appearance:none;
+}
+.comment-input:focus{border-color:rgba(201,123,123,.5)}
+.comment-submit{
+  align-self:flex-end;background:linear-gradient(135deg,#C97B7B,#E8A89A);
+  color:#fff;border:none;border-radius:10px;padding:8px 16px;
+  font-size:12px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;min-height:36px;white-space:nowrap;
+}
+.comment-submit:active{transform:scale(.97)}
+.comment-item{display:flex;gap:9px;padding:10px 0;border-top:1px solid rgba(200,160,140,.1)}
+.c-avatar{width:28px;height:28px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px}
+.c-name{font-size:11px;font-weight:500;color:var(--text-mid);margin-bottom:2px}
+.c-text{font-size:13px;color:var(--text-dark);line-height:1.65}
+.c-time{font-size:10px;color:var(--text-light);margin-top:3px}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════
+     BGM (배경음악)
+     파일 위치: audio/bgm.mp3
+════════════════════════════════════════ -->
+<audio id="bgm" loop preload="none">
+  <source src="audio/bgm.mp3" type="audio/mpeg">
+</audio>
+
+<!-- BGM 토글 버튼 (항상 우측 하단 고정) -->
+<button id="bgm-toggle" onclick="toggleBGM()" title="배경음악 켜기/끄기">🎵</button>
+
+<!-- ═══════════════════════════════════════
+     LANDING PAGE
+════════════════════════════════════════ -->
+<div id="landing">
+  <div class="visitor-badge">
+    <span class="visitor-dot"></span>
+    <span id="visitor-count">0</span>명이 다녀갔어요
+  </div>
+
+  <!-- 떠다니는 음표 -->
+  <span class="note-float" style="top:12%;left:6%;animation-delay:0s">♩</span>
+  <span class="note-float" style="top:22%;right:8%;animation-delay:1.2s">♪</span>
+  <span class="note-float" style="top:55%;left:4%;animation-delay:2.5s">♫</span>
+  <span class="note-float" style="bottom:18%;right:6%;animation-delay:.8s">♬</span>
+  <span class="note-float" style="bottom:28%;left:12%;animation-delay:1.8s">♩</span>
+
+  <!-- 일러스트 -->
+  <div class="scene-wrap">
+    <svg viewBox="0 0 440 260" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="220" cy="242" rx="175" ry="16" fill="rgba(200,160,140,.12)"/>
+      <rect x="155" y="160" width="130" height="72" rx="18" fill="#FFE4CC" stroke="#E8C4A0" stroke-width="1.5"/>
+      <rect x="165" y="168" width="110" height="56" rx="12" fill="rgba(255,255,255,.8)" stroke="#E8C4A0" stroke-width="1"/>
+      <ellipse cx="220" cy="202" rx="22" ry="13" fill="#FFD6C0"/>
+      <circle cx="220" cy="187" r="14" fill="#FFD6C0"/>
+      <circle cx="215" cy="184" r="2" fill="#8B5A3C" opacity=".7"/>
+      <circle cx="225" cy="184" r="2" fill="#8B5A3C" opacity=".7"/>
+      <path d="M216 191 Q220 194 224 191" stroke="#C97B7B" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <path d="M213 176 Q216 171 220 174" stroke="#C4956A" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <path d="M220 174 Q224 171 227 176" stroke="#C4956A" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <path d="M202 197 Q198 193 200 189" stroke="#FFD6C0" stroke-width="6" fill="none" stroke-linecap="round"/>
+      <path d="M238 197 Q242 193 240 189" stroke="#FFD6C0" stroke-width="6" fill="none" stroke-linecap="round"/>
+      <path d="M198 206 Q220 215 242 206 L242 221 Q220 227 198 221 Z" fill="#FFB8C8" opacity=".8"/>
+      <text x="246" y="176" font-size="12" fill="#C97B7B" opacity=".8">♪</text>
+      <text x="258" y="161" font-size="9" fill="#E8A89A" opacity=".6">♩</text>
+      <text x="235" y="156" font-size="10" fill="#5B9B8E" opacity=".7">♫</text>
+      <!-- 엄마 -->
+      <circle cx="115" cy="148" r="20" fill="#F5C9A0"/>
+      <path d="M96 142 Q100 128 115 128 Q130 128 134 142" fill="#8B5A3C"/>
+      <path d="M96 142 Q94 152 98 158" fill="#8B5A3C"/>
+      <path d="M134 142 Q136 152 132 158" fill="#8B5A3C"/>
+      <circle cx="109" cy="146" r="2.5" fill="#6B4E3D"/>
+      <circle cx="121" cy="146" r="2.5" fill="#6B4E3D"/>
+      <path d="M109 154 Q115 159 121 154" stroke="#C97B7B" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <path d="M97 168 Q100 158 115 162 Q130 158 133 168 L136 220 Q115 224 94 220 Z" fill="#C8A8E0" opacity=".9"/>
+      <path d="M97 175 Q120 182 155 190" stroke="#F5C9A0" stroke-width="7" fill="none" stroke-linecap="round"/>
+      <!-- 아빠 -->
+      <circle cx="325" cy="148" r="22" fill="#E8B88A"/>
+      <path d="M304 140 Q308 128 325 127 Q342 128 346 140 L346 134 Q340 122 325 121 Q310 122 304 134 Z" fill="#6B4035"/>
+      <circle cx="319" cy="146" r="2.5" fill="#4A3020"/>
+      <circle cx="331" cy="146" r="2.5" fill="#4A3020"/>
+      <path d="M319 154 Q325 160 331 154" stroke="#A06840" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <path d="M303 170 Q308 158 325 162 Q342 158 347 170 L350 220 Q325 225 300 220 Z" fill="#7BAED4" opacity=".9"/>
+      <path d="M347 175 Q320 183 285 190" stroke="#E8B88A" stroke-width="7" fill="none" stroke-linecap="round"/>
+      <!-- 하트 -->
+      <path d="M220 140 Q220 132 226 130 Q232 128 234 136 Q236 144 220 154 Q204 144 206 136 Q208 128 214 130 Q220 132 220 140" fill="#FFB8C8" opacity=".85">
+        <animate attributeName="opacity" values=".85;1;.85" dur="2s" repeatCount="indefinite"/>
+        <animateTransform attributeName="transform" type="scale" values="1 1;1.07 1.07;1 1" dur="2s" repeatCount="indefinite" additive="sum" transformOrigin="220 140"/>
+      </path>
+      <path d="M85 155 Q78 160 80 165 Q78 170 85 174" stroke="#C8A8E0" stroke-width="1.5" fill="none" stroke-linecap="round" opacity=".6"/>
+      <path d="M72 152 Q62 160 65 168 Q62 176 72 180" stroke="#C8A8E0" stroke-width="1.5" fill="none" stroke-linecap="round" opacity=".4"/>
+      <path d="M355 155 Q362 160 360 165 Q362 170 355 174" stroke="#7BAED4" stroke-width="1.5" fill="none" stroke-linecap="round" opacity=".6"/>
+      <path d="M368 152 Q378 160 375 168 Q378 176 368 180" stroke="#7BAED4" stroke-width="1.5" fill="none" stroke-linecap="round" opacity=".4"/>
+    </svg>
+  </div>
+
+  <div class="title-area">
+    <div class="subtitle-tag">NICU MUSIC THERAPY</div>
+    <h1>우리의 <span>음악작업실</span></h1>
+    <p class="tagline">작은 기적과 함께한 소중한 음악들을<br>이곳에 모아두었어요 🎵</p>
+    <button class="enter-btn" onclick="openAlbum()">🎶 앨범 열어보기</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     ALBUM PAGE
+════════════════════════════════════════ -->
+<div id="album">
+  <div class="album-header">
+    <button class="back-btn" onclick="goBack()">← 돌아가기</button>
+    <div class="album-title">🎵 우리의 음악작업실</div>
+    <div class="album-sub">NICU 부모님들이 함께 만든 소중한 음악들</div>
+  </div>
+
+  <!-- ─── 사진 갤러리 ───
+       파일 위치: images/birthday-01.jpg ~ images/birthday-03.jpg -->
+  <div class="gallery-section">
+    <div class="section-label">📷 우리의 순간들</div>
+    <div class="gallery-grid" id="gallery-grid">
+      <!-- JS로 렌더링 -->
+    </div>
+  </div>
+
+  <!-- ─── 라이트박스 (사진 확대) ─── -->
+  <div id="lightbox">
+    <button class="lb-close" onclick="closeLightbox()">✕</button>
+    <button class="lb-nav lb-prev" onclick="navLightbox(-1)">‹</button>
+    <img id="lb-img" src="" alt="사진">
+    <button class="lb-nav lb-next" onclick="navLightbox(1)">›</button>
+  </div>
+
+  <!-- ─── 트랙 리스트 ─── -->
+  <div class="tracks-section">
+    <div class="section-label">🎼 트랙 리스트</div>
+    <div id="track-list"></div>
+  </div>
+
+  <!-- ─── 리액션 ─── -->
+  <div class="reactions-section">
+    <div class="reactions-box">
+      <div class="reactions-title">REACT · 함께 느껴요</div>
+      <div class="emoji-row" id="emoji-row"></div>
+      <div class="heart-area">
+        <button class="heart-btn" id="heart-btn" onclick="addHeart()">❤️</button>
+        <span class="heart-count" id="heart-count">❤️ 0</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── 댓글 ─── -->
+  <div class="comments-section">
+    <div class="comments-box">
+      <div class="comments-title">💬 댓글 남기기</div>
+      <div class="comment-input-wrap">
+        <div class="comment-avatar">🌷</div>
+        <div class="input-col">
+          <textarea class="comment-input" id="comment-input" rows="2" placeholder="따뜻한 말을 남겨주세요..."></textarea>
+          <button class="comment-submit" onclick="addComment()">남기기 ↑</button>
+        </div>
+      </div>
+      <div id="comment-list"></div>
+    </div>
+  </div>
+
+  <!-- ─── 재생 중 바 ─── -->
+  <div class="now-playing" id="now-playing">
+    <div class="np-thumb" id="np-thumb">🎵</div>
+    <div class="np-info">
+      <div class="np-name" id="np-name">—</div>
+      <div class="np-sub" id="np-sub">재생 중</div>
+    </div>
+    <div class="np-wave">
+      <div class="np-bar"></div><div class="np-bar"></div>
+      <div class="np-bar"></div><div class="np-bar"></div>
+      <div class="np-bar"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     JAVASCRIPT
+════════════════════════════════════════ -->
+<script>
+/* ─── 데이터 ─── */
+
+// 갤러리 사진 3장
+// 파일 위치: images/birthday-01.jpg ~ images/birthday-03.jpg
+const PHOTOS = [
+  { src: 'images/birthday-01.jpg', alt: '우리의 첫 순간' },
+  { src: 'images/birthday-02.jpg', alt: '작은 손' },
+  { src: 'images/birthday-03.jpg', alt: '함께하는 시간' },
+];
+
+// 트랙 리스트 (트랙 수, 제목, 작가, 설명, file 경로 자유롭게 수정하세요)
+// file: 'audio/파일명.mp3'  ← 다운로드할 실제 파일 경로
+const TRACKS = [
+  { emoji:'🌙', name:'자장가 – 별빛 아래', author:'김지수 엄마', duration:'3:24', desc:'우리 아가야, 엄마 여기 있어',    file:'audio/track-01.mp3' },
+  { emoji:'🌸', name:'작은 손',            author:'박민준 아빠', duration:'2:58', desc:'네 작은 손을 꼭 잡고 있을게',   file:'audio/track-02.mp3' },
+  { emoji:'☁️', name:'구름 위 산책',        author:'이하은 엄마', duration:'4:10', desc:'함께 걸을 날을 기다리며',       file:'audio/track-03.mp3' },
+  { emoji:'🌿', name:'초록빛 아침',         author:'최승호 아빠', duration:'3:47', desc:'오늘도 힘내자, 우리 아가',      file:'audio/track-04.mp3' },
+  { emoji:'🦋', name:'나비의 꿈',           author:'정수아 엄마', duration:'3:15', desc:'예쁘게 날아갈 너를 응원해',    file:'audio/track-05.mp3' },
+  { emoji:'🌺', name:'봄이 오면',           author:'윤태양 엄마아빠', duration:'5:02', desc:'함께 맞이할 봄을 꿈꾸며', file:'audio/track-06.mp3' },
+];
+
+const EMOJIS = [
+  { e:'😢', label:'뭉클해요',    count:12 },
+  { e:'🥰', label:'사랑스러워요', count:24 },
+  { e:'💪', label:'힘이 나요',   count:8  },
+  { e:'🌟', label:'아름다워요',   count:19 },
+  { e:'🤗', label:'위로돼요',    count:15 },
+];
+
+const INIT_COMMENTS = [
+  { avatar:'🌼', name:'익명의 엄마',   text:'우리 아이도 NICU에 있었어요. 이 음악 들으니 그때 생각이 나서 눈물이 났어요. 모두 힘내세요 💕', time:'2일 전' },
+  { avatar:'🌻', name:'민준이 아빠',   text:'직접 불렀던 자장가를 이렇게 공유할 수 있어서 정말 감사해요. 우리 아이 이제 씩씩하게 잘 크고 있어요!', time:'5일 전' },
+];
+
+const THUMB_BG = ['#FFE4CC','#FFD6E8','#D4E8D0','#D6E4FF','#FFE4D6','#E4D6FF'];
+
+/* ─── 상태 ─── */
+let playingIdx   = -1;
+let heartCount   = 0;
+let emojiCounts  = EMOJIS.map(e => ({ ...e }));
+let activeEmojis = new Set();
+let comments     = [...INIT_COMMENTS];
+let lbIdx        = 0;
+let bgmPlaying   = false;
+
+/* ─── 방문자 수 ─── */
+function initVisitors() {
+  let v = 848;
+  try {
+    v = parseInt(localStorage.getItem('nicu_visitors') || '847') + 1;
+    localStorage.setItem('nicu_visitors', v);
+  } catch(e) {}
+  document.getElementById('visitor-count').textContent = v.toLocaleString();
+}
+
+/* ─── BGM ─── */
+function toggleBGM() {
+  const audio = document.getElementById('bgm');
+  const btn   = document.getElementById('bgm-toggle');
+  if (bgmPlaying) {
+    audio.pause();
+    btn.textContent = '🎵';
+    btn.classList.remove('playing');
+  } else {
+    audio.play().catch(() => {}); // 자동재생 정책 대응
+    btn.textContent = '🔇';
+    btn.classList.add('playing');
+  }
+  bgmPlaying = !bgmPlaying;
+}
+
+
+
+/* ─── 갤러리 ─── */
+function renderGallery() {
+  document.getElementById('gallery-grid').innerHTML = PHOTOS.map((p, i) => `
+    <div class="gallery-item" onclick="openLightbox(${i})">
+      <img src="${p.src}" alt="${p.alt}" loading="lazy"
+           onerror="this.parentElement.style.background='#FFE4CC';this.style.display='none'">
+    </div>`).join('');
+}
+
+function openLightbox(idx) {
+  lbIdx = idx;
+  document.getElementById('lb-img').src = PHOTOS[idx].src;
+  document.getElementById('lightbox').classList.add('open');
+}
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+}
+function navLightbox(dir) {
+  lbIdx = (lbIdx + dir + PHOTOS.length) % PHOTOS.length;
+  document.getElementById('lb-img').src = PHOTOS[lbIdx].src;
+}
+// 라이트박스 바깥 클릭 시 닫기
+document.getElementById('lightbox').addEventListener('click', function(e) {
+  if (e.target === this) closeLightbox();
+});
+// 키보드 지원 (← →  ESC)
+document.addEventListener('keydown', e => {
+  if (!document.getElementById('lightbox').classList.contains('open')) return;
+  if (e.key === 'ArrowLeft')  navLightbox(-1);
+  if (e.key === 'ArrowRight') navLightbox(1);
+  if (e.key === 'Escape')     closeLightbox();
+});
+
+/* ─── 트랙 ─── */
+const downloadedSet = new Set(); // 다운로드 완료 표시용
+
+function renderTracks() {
+  document.getElementById('track-list').innerHTML = TRACKS.map((t, i) => `
+    <div class="track-item${playingIdx === i ? ' playing' : ''}" onclick="playTrack(${i})">
+      <span class="track-num">${i + 1}</span>
+      <div class="track-thumb" style="background:${THUMB_BG[i % THUMB_BG.length]}">${t.emoji}</div>
+      <div class="track-info">
+        <div class="track-name">${t.name}</div>
+        <div class="track-desc">${t.desc} · ${t.author}</div>
+      </div>
+      <span class="track-dur">${t.duration}</span>
+      <a class="dl-btn${downloadedSet.has(i) ? ' done' : ''}"
+         href="${t.file}"
+         download="${t.name}.mp3"
+         title="${t.name} 다운로드"
+         onclick="event.stopPropagation(); markDownloaded(${i})"
+      >
+        ${downloadedSet.has(i)
+          ? `<svg viewBox="0 0 14 14"><polyline points="2,7 5.5,10.5 12,4"/></svg>`
+          : `<svg viewBox="0 0 14 14">
+               <line x1="7" y1="1" x2="7" y2="9"/>
+               <polyline points="4,6.5 7,9.5 10,6.5"/>
+               <line x1="2" y1="12" x2="12" y2="12"/>
+             </svg>`}
+      </a>
+      <div class="play-icon${playingIdx === i ? ' pause-icon' : ''}" onclick="event.stopPropagation(); playTrack(${i})">
+        ${playingIdx === i
+          ? '<svg viewBox="0 0 12 12"><rect x="1" y="1" width="3.5" height="10" rx="1"/><rect x="7.5" y="1" width="3.5" height="10" rx="1"/></svg>'
+          : '<svg viewBox="0 0 12 12"><polygon points="2,1 11,6 2,11"/></svg>'}
+      </div>
+    </div>`).join('');
+}
+
+function markDownloaded(i) {
+  downloadedSet.add(i);
+  // 0.4초 후 체크 아이콘으로 교체
+  setTimeout(() => renderTracks(), 400);
+}
+
+function playTrack(idx) {
+  playingIdx = (playingIdx === idx) ? -1 : idx;
+  renderTracks();
+  const np = document.getElementById('now-playing');
+  if (playingIdx >= 0) {
+    np.style.display = 'flex';
+    document.getElementById('np-thumb').textContent = TRACKS[idx].emoji;
+    document.getElementById('np-name').textContent  = TRACKS[idx].name;
+    document.getElementById('np-sub').textContent   = TRACKS[idx].author + ' · ' + TRACKS[idx].duration;
+  } else {
+    np.style.display = 'none';
+  }
+}
+
+/* ─── 이모지 반응 ─── */
+function renderEmojis() {
+  document.getElementById('emoji-row').innerHTML = emojiCounts.map((item, i) => `
+    <button class="emoji-btn${activeEmojis.has(i) ? ' active' : ''}" onclick="toggleEmoji(${i})">
+      <span class="emo">${item.e}</span>
+      <span>${item.label}</span>
+      <span class="emoji-count">${item.count}</span>
+    </button>`).join('');
+}
+
+function toggleEmoji(i) {
+  if (activeEmojis.has(i)) { activeEmojis.delete(i); emojiCounts[i].count--; }
+  else                      { activeEmojis.add(i);    emojiCounts[i].count++; }
+  renderEmojis();
+}
+
+/* ─── 하트 ─── */
+function addHeart() {
+  heartCount++;
+  const btn = document.getElementById('heart-btn');
+  btn.classList.add('boom');
+  setTimeout(() => btn.classList.remove('boom'), 380);
+  document.getElementById('heart-count').textContent = '❤️ ' + heartCount.toLocaleString();
+}
+
+/* ─── 댓글 ─── */
+function renderComments() {
+  const colors = ['#FFE4CC','#FFD6E8','#D4E8D0','#D6E4FF','#FFE8D4'];
+  document.getElementById('comment-list').innerHTML = comments.map((c, i) => `
+    <div class="comment-item">
+      <div class="c-avatar" style="background:${colors[i % colors.length]}">${c.avatar}</div>
+      <div>
+        <div class="c-name">${c.name}</div>
+        <div class="c-text">${c.text}</div>
+        <div class="c-time">${c.time}</div>
+      </div>
+    </div>`).join('');
+}
+
+function addComment() {
+  const inp  = document.getElementById('comment-input');
+  const text = inp.value.trim();
+  if (!text) return;
+  const avatars = ['🌷','🌸','🌹','🌺','🌻','🌼','💐'];
+  comments.unshift({
+    avatar: avatars[Math.floor(Math.random() * avatars.length)],
+    name:   '익명의 방문자',
+    text,
+    time:   '방금 전',
+  });
+  inp.value = '';
+  renderComments();
+}
+
+/* ─── 페이지 전환 ─── */
+function openAlbum() {
+  document.getElementById('landing').style.display = 'none';
+  document.getElementById('album').style.display   = 'block';
+  window.scrollTo(0, 0);
+  renderGallery();
+  renderTracks();
+  renderEmojis();
+  renderComments();
+}
+
+function goBack() {
+  document.getElementById('album').style.display   = 'none';
+  document.getElementById('landing').style.display = 'flex';
+  window.scrollTo(0, 0);
+}
+
+/* ─── 초기화 ─── */
+initVisitors();
+</script>
+</body>
+</html>
