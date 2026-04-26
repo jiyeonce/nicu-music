@@ -252,15 +252,59 @@ h1 span{color:var(--dusty-pink)}
 @keyframes heartBoom{0%{transform:scale(1)}50%{transform:scale(1.3)}100%{transform:scale(1)}}
 .heart-count{font-size:15px;color:var(--dusty-pink);font-weight:500}
 
+/* ── PASSWORD GATE ── */
+#gate{
+  position:fixed;inset:0;z-index:500;
+  background:linear-gradient(160deg,#FFF8F0 0%,#FFE8D8 50%,#FFD6E8 100%);
+  display:flex;align-items:center;justify-content:center;padding:1.5rem;
+}
+.gate-box{
+  background:#fff;border-radius:24px;padding:2.2rem 2rem;
+  border:1px solid rgba(200,160,140,.2);
+  box-shadow:0 8px 40px rgba(201,123,123,.12);
+  width:min(340px,90vw);text-align:center;
+}
+.gate-emoji{font-size:40px;margin-bottom:1rem;display:block}
+.gate-title{font-family:'Noto Serif KR',serif;font-size:1.3rem;color:var(--text-dark);margin-bottom:.4rem}
+.gate-sub{font-size:12px;color:var(--text-light);margin-bottom:1.6rem;line-height:1.7}
+.gate-input{
+  width:100%;border:1.5px solid rgba(200,160,140,.3);border-radius:12px;
+  padding:12px 16px;font-family:'Noto Sans KR',sans-serif;font-size:15px;
+  color:var(--text-dark);background:var(--cream);outline:none;
+  text-align:center;letter-spacing:4px;transition:border-color .2s;
+  -webkit-appearance:none;margin-bottom:.8rem;
+}
+.gate-input:focus{border-color:rgba(201,123,123,.5)}
+.gate-btn{
+  width:100%;background:linear-gradient(135deg,#C97B7B,#E8A89A);color:#fff;border:none;
+  border-radius:12px;padding:12px;font-family:'Noto Sans KR',sans-serif;
+  font-size:14px;font-weight:500;cursor:pointer;min-height:48px;transition:all .2s;
+}
+.gate-btn:active{transform:scale(.98)}
+.gate-error{
+  font-size:12px;color:#C97B7B;margin-top:.5rem;
+  display:none;animation:fadeUp .3s ease;
+}
+.gate-error.show{display:block}
+
 /* ── COMMENTS ── */
 .comments-section{padding:.5rem 1rem 1.5rem}
+.name-row{display:flex;gap:7px;margin-bottom:7px}
+.name-input{
+  flex:1;border:1.5px solid rgba(200,160,140,.25);border-radius:10px;
+  padding:8px 12px;font-family:'Noto Sans KR',sans-serif;font-size:13px;
+  color:var(--text-dark);background:var(--cream);outline:none;
+  transition:border-color .2s;-webkit-appearance:none;min-height:36px;
+}
+.name-input:focus{border-color:rgba(201,123,123,.5)}
+.name-input::placeholder{color:var(--text-light)}
 .comment-input-wrap{display:flex;gap:8px;margin-bottom:1rem;align-items:flex-start}
 .comment-avatar{
   width:32px;height:32px;border-radius:50%;
   background:linear-gradient(135deg,#FFB8A0,#FFD6D6);
   flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;margin-top:2px;
 }
-.input-col{flex:1;display:flex;flex-direction:column;gap:7px}
+.input-col{flex:1;display:flex;flex-direction:column;gap:0}
 .comment-input{
   width:100%;border:1.5px solid rgba(200,160,140,.25);border-radius:12px;
   padding:9px 12px;font-family:'Noto Sans KR',sans-serif;font-size:13px;
@@ -272,6 +316,7 @@ h1 span{color:var(--dusty-pink)}
   align-self:flex-end;background:linear-gradient(135deg,#C97B7B,#E8A89A);
   color:#fff;border:none;border-radius:10px;padding:8px 16px;
   font-size:12px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;min-height:36px;white-space:nowrap;
+  margin-top:7px;
 }
 .comment-submit:active{transform:scale(.97)}
 .comment-item{display:flex;gap:9px;padding:10px 0;border-top:1px solid rgba(200,160,140,.1)}
@@ -279,9 +324,28 @@ h1 span{color:var(--dusty-pink)}
 .c-name{font-size:11px;font-weight:500;color:var(--text-mid);margin-bottom:2px}
 .c-text{font-size:13px;color:var(--text-dark);line-height:1.65}
 .c-time{font-size:10px;color:var(--text-light);margin-top:3px}
+.comments-empty{font-size:13px;color:var(--text-light);text-align:center;padding:1rem 0;line-height:1.8}
 </style>
 </head>
 <body>
+
+<!-- ═══════════════════════════════════════
+     비밀번호 게이트
+     비밀번호 변경: JS 아래 PASSCODE 변수를 수정하세요
+════════════════════════════════════════ -->
+<div id="gate">
+  <div class="gate-box">
+    <span class="gate-emoji">🎵</span>
+    <div class="gate-title">우리의 음악작업실</div>
+    <div class="gate-sub">NICU 부모님들과 함께하는<br>소중한 공간이에요<br><br>입장 코드를 입력해주세요</div>
+    <input class="gate-input" id="gate-input" type="password"
+           placeholder="· · · ·"
+           maxlength="10"
+           onkeydown="if(event.key==='Enter') checkPassword()">
+    <button class="gate-btn" onclick="checkPassword()">입장하기 →</button>
+    <div class="gate-error" id="gate-error">입장 코드가 맞지 않아요 🌸</div>
+  </div>
+</div>
 
 <!-- ═══════════════════════════════════════
      BGM (배경음악)
@@ -415,10 +479,13 @@ h1 span{color:var(--dusty-pink)}
   <!-- ─── 댓글 ─── -->
   <div class="comments-section">
     <div class="comments-box">
-      <div class="comments-title">💬 댓글 남기기</div>
+      <div class="comments-title">💬 메시지 남기기</div>
       <div class="comment-input-wrap">
         <div class="comment-avatar">🌷</div>
         <div class="input-col">
+          <div class="name-row">
+            <input class="name-input" id="name-input" type="text" placeholder="이름 (예: 지수엄마)" maxlength="20">
+          </div>
           <textarea class="comment-input" id="comment-input" rows="2" placeholder="따뜻한 말을 남겨주세요..."></textarea>
           <button class="comment-submit" onclick="addComment()">남기기 ↑</button>
         </div>
@@ -448,37 +515,28 @@ h1 span{color:var(--dusty-pink)}
 <script>
 /* ─── 데이터 ─── */
 
-// 갤러리 사진 3장
-// 파일 위치: images/birthday-01.jpg ~ images/birthday-03.jpg
+// 갤러리 사진
+// 파일 위치: images/ 폴더
 const PHOTOS = [
-  { src: 'images/birthday-01.jpg', alt: '우리의 첫 순간' },
-  { src: 'images/birthday-02.jpg', alt: '작은 손' },
-  { src: 'images/birthday-03.jpg', alt: '함께하는 시간' },
+  { src: 'images/kyunghwa-cover01.jpg', alt: '경화와 함께한 순간' },
+  { src: 'images/kyunghwa-cover02.jpg', alt: '소중한 기억' },
 ];
 
-// 트랙 리스트 (트랙 수, 제목, 작가, 설명, file 경로 자유롭게 수정하세요)
-// file: 'audio/파일명.mp3'  ← 다운로드할 실제 파일 경로
+// 트랙 리스트 — 파일 추가할 때 아래에 한 줄씩 추가하세요
+// { emoji:'🌸', name:'곡 제목', author:'만든 분', duration:'3:00', desc:'한 줄 설명', file:'audio/파일명.mp3' },
 const TRACKS = [
-  { emoji:'🌙', name:'자장가 – 별빛 아래', author:'김지수 엄마', duration:'3:24', desc:'우리 아가야, 엄마 여기 있어',    file:'audio/track-01.mp3' },
-  { emoji:'🌸', name:'작은 손',            author:'박민준 아빠', duration:'2:58', desc:'네 작은 손을 꼭 잡고 있을게',   file:'audio/track-02.mp3' },
-  { emoji:'☁️', name:'구름 위 산책',        author:'이하은 엄마', duration:'4:10', desc:'함께 걸을 날을 기다리며',       file:'audio/track-03.mp3' },
-  { emoji:'🌿', name:'초록빛 아침',         author:'최승호 아빠', duration:'3:47', desc:'오늘도 힘내자, 우리 아가',      file:'audio/track-04.mp3' },
-  { emoji:'🦋', name:'나비의 꿈',           author:'정수아 엄마', duration:'3:15', desc:'예쁘게 날아갈 너를 응원해',    file:'audio/track-05.mp3' },
-  { emoji:'🌺', name:'봄이 오면',           author:'윤태양 엄마아빠', duration:'5:02', desc:'함께 맞이할 봄을 꿈꾸며', file:'audio/track-06.mp3' },
+  { emoji:'🎵', name:'소라게', author:'', duration:'', desc:'', file:'audio/soragae.mp3' },
 ];
 
 const EMOJIS = [
-  { e:'😢', label:'뭉클해요',    count:12 },
-  { e:'🥰', label:'사랑스러워요', count:24 },
-  { e:'💪', label:'힘이 나요',   count:8  },
-  { e:'🌟', label:'아름다워요',   count:19 },
-  { e:'🤗', label:'위로돼요',    count:15 },
+  { e:'😢', label:'뭉클해요',    count:0 },
+  { e:'🥰', label:'사랑스러워요', count:0 },
+  { e:'💪', label:'힘이 나요',   count:0 },
+  { e:'🌟', label:'아름다워요',   count:0 },
+  { e:'🤗', label:'위로돼요',    count:0 },
 ];
 
-const INIT_COMMENTS = [
-  { avatar:'🌼', name:'익명의 엄마',   text:'우리 아이도 NICU에 있었어요. 이 음악 들으니 그때 생각이 나서 눈물이 났어요. 모두 힘내세요 💕', time:'2일 전' },
-  { avatar:'🌻', name:'민준이 아빠',   text:'직접 불렀던 자장가를 이렇게 공유할 수 있어서 정말 감사해요. 우리 아이 이제 씩씩하게 잘 크고 있어요!', time:'5일 전' },
-];
+const INIT_COMMENTS = [];
 
 const THUMB_BG = ['#FFE4CC','#FFD6E8','#D4E8D0','#D6E4FF','#FFE4D6','#E4D6FF'];
 
@@ -490,6 +548,32 @@ let activeEmojis = new Set();
 let comments     = [...INIT_COMMENTS];
 let lbIdx        = 0;
 let bgmPlaying   = false;
+
+/* ─── 비밀번호 ───
+   ↓ 여기서 입장 코드를 바꾸세요 ↓              */
+const PASSCODE = 'nicu';
+/* ─────────────────────────────────────── */
+
+function checkPassword() {
+  const val = document.getElementById('gate-input').value;
+  const err = document.getElementById('gate-error');
+  if (val === PASSCODE) {
+    document.getElementById('gate').style.display = 'none';
+    try { sessionStorage.setItem('nicu_auth','1'); } catch(e) {}
+  } else {
+    err.classList.add('show');
+    document.getElementById('gate-input').value = '';
+    document.getElementById('gate-input').focus();
+    setTimeout(() => err.classList.remove('show'), 2500);
+  }
+}
+
+// 같은 세션에서 이미 인증했으면 게이트 스킵
+try {
+  if (sessionStorage.getItem('nicu_auth') === '1') {
+    document.getElementById('gate').style.display = 'none';
+  }
+} catch(e) {}
 
 /* ─── 방문자 수 ─── */
 function initVisitors() {
@@ -634,6 +718,11 @@ function addHeart() {
 
 /* ─── 댓글 ─── */
 function renderComments() {
+  if (!comments.length) {
+    document.getElementById('comment-list').innerHTML =
+      '<div class="comments-empty">첫 번째 메시지를 남겨주세요 🌸</div>';
+    return;
+  }
   const colors = ['#FFE4CC','#FFD6E8','#D4E8D0','#D6E4FF','#FFE8D4'];
   document.getElementById('comment-list').innerHTML = comments.map((c, i) => `
     <div class="comment-item">
@@ -647,17 +736,22 @@ function renderComments() {
 }
 
 function addComment() {
-  const inp  = document.getElementById('comment-input');
-  const text = inp.value.trim();
-  if (!text) return;
+  const textEl  = document.getElementById('comment-input');
+  const nameEl  = document.getElementById('name-input');
+  const text    = textEl.value.trim();
+  if (!text) { textEl.focus(); return; }
+
+  const displayName = nameEl.value.trim() || '익명의 방문자';
+
   const avatars = ['🌷','🌸','🌹','🌺','🌻','🌼','💐'];
   comments.unshift({
     avatar: avatars[Math.floor(Math.random() * avatars.length)],
-    name:   '익명의 방문자',
+    name:   displayName,
     text,
     time:   '방금 전',
   });
-  inp.value = '';
+  textEl.value = '';
+  nameEl.value = '';
   renderComments();
 }
 
