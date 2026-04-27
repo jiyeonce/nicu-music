@@ -312,7 +312,10 @@ h1 span{color:var(--dusty-pink)}
     <div class="page-title" id="room-title"></div>
     <div class="page-sub" id="room-sub"></div>
   </div>
-
+<div class="section" style="padding-bottom:.2rem">
+  <div class="section-label">📅 날짜 선택</div>
+  <div id="date-tabs" style="display:flex;gap:8px;overflow-x:auto;padding-bottom:4px"></div>
+</div>
   <div class="section">
     <div class="section-label">📷 우리의 순간들</div>
     <div class="gallery-grid" id="room-gallery"></div>
@@ -482,6 +485,7 @@ const PASSCODE = 'nicu';
 
 /* ══ 상태 ══ */
 let currentRoom = 0, playingIdx = -1;
+let currentDateIdx = 0;  
 let roomActiveEmojis = new Set(), commActiveEmojis = new Set();
 let selectedType = 'cheer', lbIdx = 0, bgmPlaying = false;
 const downloadedSet = new Set();
@@ -725,6 +729,42 @@ function addCommStory(){
   const av=['🌷','🌸','🌹','🌺','🌻','🌼','💐','🌈','⭐','🎀'];
   COMM.stories.unshift({avatar:av[Math.floor(Math.random()*av.length)],name:n.value.trim()||'익명의 방문자',text,time:'방금 전',type:selectedType});
   t.value='';n.value='';renderCommStories();
+}
+  function renderDateTabs(){
+  const dates = ROOMS[currentRoom].dates || [];
+  const el = document.getElementById('date-tabs');
+
+  if(!dates.length){
+    el.innerHTML = '';
+    return;
+  }
+
+  el.innerHTML = dates.map((d,i)=>`
+    <button onclick="selectDate(${i})"
+      style="
+        flex-shrink:0;
+        border:1.5px solid ${currentDateIdx===i ? '#C97B7B' : 'rgba(200,160,140,.25)'};
+        background:${currentDateIdx===i ? '#FFF0E8' : '#fff'};
+        color:#3D2B1F;
+        border-radius:20px;
+        padding:8px 14px;
+        font-family:'Noto Sans KR',sans-serif;
+        font-size:12px;
+      ">
+      ${d.label}
+    </button>
+  `).join('');
+}
+
+function selectDate(i){
+  currentDateIdx = i;
+  playingIdx = -1;
+  player.pause();
+  document.getElementById('now-playing').style.display='none';
+
+  renderDateTabs();
+  renderRoomGallery();
+  renderRoomTracks();
 }
 </script>
 </body>
