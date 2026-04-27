@@ -194,6 +194,7 @@ h1 span{color:var(--dusty-pink)}
 .badge-cheer{background:#FFF0E8;color:#C97B7B}
 .badge-news{background:#E8F8F0;color:#5B9B8E}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>  
 </head>
 <body>
 
@@ -424,6 +425,10 @@ h1 span{color:var(--dusty-pink)}
 </div>
 
 <script>
+const SUPABASE_URL = '너의 Supabase URL';
+const SUPABASE_KEY = '너의 anon public key';
+
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);    
 /* ══════════════════════════════════════════
    ★ 데이터 설정 — 여기만 수정하면 돼요 ★
 ══════════════════════════════════════════ */
@@ -556,7 +561,7 @@ renderDateTabs();
 renderRoomGallery();
 renderRoomTracks();
 renderRoomEmojis();
-renderRoomComments();
+loadRoomComments();
 
   window.scrollTo(0,0);
 }
@@ -689,30 +694,92 @@ function addRoomHeart(){
 
 /* ══ 작업실 댓글 ══ */
 function renderRoomComments(){
-  const comments=ROOMS[currentRoom].comments;
-  const el=document.getElementById('room-comment-list');
-  if(!comments.length){el.innerHTML='<div class="list-empty">첫 번째 메시지를 남겨주세요 🌸</div>';return;}
+  const comments = ROOMS[currentRoom].dates?.[currentDateIdx]?.comments || [];
+  const el = document.getElementById('room-comment-list');
+
+  if(!comments.length){
+    el.innerHTML = '<div class="list-empty">첫 번째 메시지를 남겨주세요 🌸</div>';
+    return;
+  }
+
   const colors=['#FFE4CC','#FFD6E8','#D4E8D0','#D6E4FF','#FFE8D4'];
-  el.innerHTML=comments.map((c,i)=>`
+
+  el.innerHTML = comments.map((c,i)=>`
     <div class="comment-item">
       <div class="c-avatar" style="background:${colors[i%colors.length]}">${c.avatar}</div>
-      <div><div class="c-name">${c.name}</div><div class="c-text">${c.text}</div><div class="c-time">${c.time}</div></div>
-    </div>`).join('');
-}
-function addRoomComment(){
-  const t=document.getElementById('room-comment-input'),n=document.getElementById('room-name-input');
-  const text=t.value.trim();if(!text){t.focus();return;}
-  const av=['🌷','🌸','🌹','🌺','🌻','🌼','💐'];
-  ROOMS[currentRoom].comments.unshift({avatar:av[Math.floor(Math.random()*av.length)],name:n.value.trim()||'익명의 방문자',text,time:'방금 전'});
-  t.value='';n.value='';renderRoomComments();
+      <div>
+        <div class="c-name">${c.name}</div>
+        <div class="c-text">${c.text}</div>
+        <div class="c-time">${c.time}</div>
+      </div>
+    </div>
+  `).join('');
 }
 
-/* ══ 우리들의 이야기 ══ */
-function renderCommEmojis(){
-  document.getElementById('comm-emojis').innerHTML=COMM.emojis.map((item,i)=>`
+async function addRoomComment(){  
+  const t=document.getElementById('room-comment-input');
+  const n=document.getElementById('room-name-input');
+
+  const text=t.value.trim();
+  if(!text){t.focus();return;}
+
+  const av=['🌷','🌸','🌹','🌺','🌻','🌼','💐'];
+  const avatar=av[Math.floor(Math.random()*av.length)];
+  const name=n.value.trim()||'익명의 방문자';
+
+  const { error } = await supabaseClient
+    .from('nicu_comments')
+    .insert({
+      room_idx: currentRoom,
+      date_idx: currentDateIdx,
+      name,
+      text,
+      avatar
+    });
+
+  if(error){
+    alert('댓글 저장 실패 😢');
+    console.log(error);
+    return;
+  }
+
+  t.value='';
+  n.value='';
+
+  loadRoomComments();
+}
+
+async function loadRoomComments(){
+  const { data, error } = await supabaseClient
+    .from('nicu_comments')
+    .select('*')
+    .eq('room_idx', currentRoom)
+    .eq('date_idx', currentDateIdx)
+    .order('created_at', { ascending: false });
+
+  if(error){
+    console.log(error);
+    return;
+  }
+
+  const targetDate = ROOMS[currentRoom].dates[currentDateIdx];
+  targetDate.comments = data.map(c => ({
+    avatar: c.avatar,
+    name: c.name,
+    text: c.text,
+    time: '방금 전'
+  }));
+
+  renderRoomComments();
+}
+  function renderCommEmojis(){
+  document.getElementById('comm-emojis').innerHTML = COMM.emojis.map((item,i)=>`
     <button class="emoji-btn${commActiveEmojis.has(i)?' active':''}" onclick="toggleCommEmoji(${i})">
-      <span class="emo">${item.e}</span><span>${item.label}</span><span class="emoji-count">${item.count}</span>
-    </button>`).join('');
+      <span class="emo">${item.e}</span>
+      <span>${item.label}</span>
+      <span class="emoji-count">${item.count}</span>
+    </button>
+  `).join('');
 }
 function toggleCommEmoji(i){
   if(commActiveEmojis.has(i)){commActiveEmojis.delete(i);COMM.emojis[i].count--;}
@@ -786,6 +853,8 @@ function selectDate(i){
   renderDateTabs();
   renderRoomGallery();
   renderRoomTracks();
+
+  loadRoomComments();
 }
 </script>
 </body>
