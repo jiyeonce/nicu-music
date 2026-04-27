@@ -710,7 +710,13 @@ function renderRoomComments(){
       <div>
         <div class="c-name">${c.name}</div>
         <div class="c-text">${c.text}</div>
-        <div class="c-time">${c.time}</div>
+        <div class="c-time">
+  ${c.time}
+  <button onclick="deleteComment('${c.id}')"
+    style="margin-left:8px;border:none;background:transparent;cursor:pointer;font-size:13px;">
+    🗑
+  </button>
+</div>
       </div>
     </div>
   `).join('');
@@ -764,6 +770,7 @@ async function loadRoomComments(){
 
   const targetDate = ROOMS[currentRoom].dates[currentDateIdx];
   targetDate.comments = data.map(c => ({
+  id: c.id,
   avatar: c.avatar,
   name: c.name,
   text: c.text,
