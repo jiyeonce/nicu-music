@@ -589,9 +589,14 @@ function renderRoomGallery(){
            onerror="this.parentElement.style.background='#FFE4CC';this.style.display='none'">
     </div>`).join('');
 }
-function openLightbox(idx){lbIdx=idx;document.getElementById('lb-img').src=ROOMS[currentRoom].photos[idx].src;document.getElementById('lightbox').classList.add('open');}
+function openLightbox(idx){
+  lbIdx = idx;
+  const photos = ROOMS[currentRoom].dates?.[currentDateIdx]?.photos || [];
+  document.getElementById('lb-img').src = photos[idx].src;
+  document.getElementById('lightbox').classList.add('open');
+}
 function closeLightbox(){document.getElementById('lightbox').classList.remove('open');}
-function navLightbox(dir){const p=ROOMS[currentRoom].photos;lbIdx=(lbIdx+dir+p.length)%p.length;document.getElementById('lb-img').src=p[lbIdx].src;}
+function navLightbox(dir){const p = ROOMS[currentRoom].dates?.[currentDateIdx]?.photos || [];lbIdx=(lbIdx+dir+p.length)%p.length;document.getElementById('lb-img').src=p[lbIdx].src;}
 document.getElementById('lightbox').addEventListener('click',function(e){if(e.target===this)closeLightbox();});
 document.addEventListener('keydown',e=>{
   if(!document.getElementById('lightbox').classList.contains('open'))return;
@@ -643,7 +648,7 @@ function renderRoomTracks(){
     </div>`).join('');
 }
 function playTrack(idx){
-  const tracks=ROOMS[currentRoom].tracks;
+  const tracks = ROOMS[currentRoom].dates?.[currentDateIdx]?.tracks || [];
   if(playingIdx===idx){
     if(player.paused){player.play().catch(()=>{});playingIdx=idx;}
     else{player.pause();playingIdx=-1;}
@@ -655,8 +660,10 @@ function playTrack(idx){
   }
   renderRoomTracks();
   const tracks = ROOMS[currentRoom].dates?.[currentDateIdx]?.tracks || [];
-  if(playingIdx>=0){
-    np.style.display='flex';
+  const np = document.getElementById('now-playing');
+
+if(playingIdx>=0){
+  np.style.display='flex';
     document.getElementById('np-thumb').textContent=tracks[idx].emoji;
     document.getElementById('np-name').textContent=tracks[idx].name;
     document.getElementById('np-sub').textContent=tracks[idx].author||'재생 중';
