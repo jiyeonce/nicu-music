@@ -764,11 +764,11 @@ async function loadRoomComments(){
 
   const targetDate = ROOMS[currentRoom].dates[currentDateIdx];
   targetDate.comments = data.map(c => ({
-    avatar: c.avatar,
-    name: c.name,
-    text: c.text,
-    time: '방금 전'
-  }));
+  avatar: c.avatar,
+  name: c.name,
+  text: c.text,
+  time: new Date(c.created_at).toLocaleString()
+}));
 
   renderRoomComments();
 }
