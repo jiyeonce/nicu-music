@@ -431,20 +431,28 @@ const ROOMS = [
   {
     title: '🎵 자장가 만들기 작업실',
     sub:   '아가에게 전하는 자장가 모음',
+    dates: [
+  {
+    label: '4월 10일',
     photos: [
-        { src: 'images/nicu-image01.jpg', alt: '자장가 만들기01' },
-        { src: 'images/nicu-image02.jpg', alt: '자장가 만들기02' },
-        { src: 'images/nicu-image03.jpg', alt: '자장가 만들기03' },
-        { src: 'images/nicu-image04.jpg', alt: '자장가 만들기04' },
-
-      // 사진 추가: { src:'images/파일명.jpg', alt:'설명' },
+      { src: 'images/nicu-image01.jpg', alt: '자장가1' },
+      { src: 'images/nicu-image02.jpg', alt: '자장가2' },
     ],
     tracks: [
-     { emoji:'⭐', name:'작은별(4명)', author:'', duration:'', desc:'', file:'audio/twinkle.mp3' },
-     { emoji:'⭐', name:'ㅅㅅㅇ자장가', author:'', duration:'', desc:'', file:'audio/mother01.mp3' },
-     { emoji:'⭐', name:'ㅅㅇㅎ자장가', author:'', duration:'', desc:'', file:'audio/mother02.mp3' },
-     { emoji:'⭐', name:'ㅇㅅㅎ자장가', author:'', duration:'', desc:'', file:'audio/mother03.mp3' },
-     { emoji:'⭐', name:'ㅇㅇㄹ자장가', author:'', duration:'', desc:'', file:'audio/mother04.mp3' },
+      { emoji:'⭐', name:'작은별(4명)', file:'audio/twinkle.mp3' },
+      { emoji:'⭐', name:'ㅅㅅㅇ자장가', file:'audio/mother01.mp3' },
+    ]
+  },
+  {
+    label: '4월 17일',
+    photos: [
+      { src: 'images/nicu-image03.jpg', alt: '자장가3' },
+    ],
+    tracks: [
+      { emoji:'⭐', name:'ㅇㅅㅎ자장가', file:'audio/mother03.mp3' },
+    ]
+  }
+],
 
       // 트랙 추가: { emoji:'🌙', name:'곡 제목', author:'지수엄마', duration:'3:20', desc:'', file:'audio/파일명.mp3' },
     ],
@@ -533,7 +541,10 @@ function openHub(){
 function openRoom(idx){
   currentRoom=idx;
   playingIdx=-1;
+  currentDateIdx = 0;
+
   roomActiveEmojis=new Set();
+  
   document.getElementById('now-playing').style.display='none';
   document.getElementById('hub').style.display='none';
   document.getElementById('room').style.display='block';
@@ -541,7 +552,13 @@ function openRoom(idx){
   document.getElementById('room-title').textContent=ROOMS[idx].title;
   document.getElementById('room-sub').textContent=ROOMS[idx].sub;
   document.getElementById('room-heart-count').textContent='❤️ '+ROOMS[idx].heartCount;
-  renderRoomGallery();renderRoomTracks();renderRoomEmojis();renderRoomComments();
+  
+renderDateTabs();
+renderRoomGallery();
+renderRoomTracks();
+renderRoomEmojis();
+renderRoomComments();
+
   window.scrollTo(0,0);
 }
 function openCommunity(){
@@ -563,7 +580,7 @@ function goHub(){
 
 /* ══ 갤러리 ══ */
 function renderRoomGallery(){
-  const photos=ROOMS[currentRoom].photos;
+  const photos = ROOMS[currentRoom].dates?.[currentDateIdx]?.photos || [];
   const el=document.getElementById('room-gallery');
   if(!photos.length){el.innerHTML='';return;}
   el.innerHTML=photos.map((p,i)=>`
@@ -599,7 +616,7 @@ player.addEventListener('ended',()=>{playingIdx=-1;renderRoomTracks();document.g
 function seekTrack(val){if(player.duration)player.currentTime=(val/100)*player.duration;}
 
 function renderRoomTracks(){
-  const tracks=ROOMS[currentRoom].tracks;
+  const tracks = ROOMS[currentRoom].dates?.[currentDateIdx]?.tracks || [];
   const el=document.getElementById('room-tracks');
   if(!tracks.length){el.innerHTML='<p style="font-size:13px;color:var(--text-light);text-align:center;padding:1rem 0">준비 중이에요 🎵</p>';return;}
   el.innerHTML=tracks.map((t,i)=>`
@@ -637,7 +654,7 @@ function playTrack(idx){
     document.getElementById('np-cur').textContent='0:00';
   }
   renderRoomTracks();
-  const np=document.getElementById('now-playing');
+  const tracks = ROOMS[currentRoom].dates?.[currentDateIdx]?.tracks || [];
   if(playingIdx>=0){
     np.style.display='flex';
     document.getElementById('np-thumb').textContent=tracks[idx].emoji;
