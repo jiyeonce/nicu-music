@@ -454,8 +454,7 @@ const ROOMS = [
   }
 ],
 
-      // 트랙 추가: { emoji:'🌙', name:'곡 제목', author:'지수엄마', duration:'3:20', desc:'', file:'audio/파일명.mp3' },
-    ],
+      // 트랙 추가...
     heartCount:0, emojis:[{e:'😢',label:'뭉클해요',count:0},{e:'🥰',label:'사랑스러워요',count:0},{e:'💪',label:'힘이 나요',count:0},{e:'🌟',label:'아름다워요',count:0}], comments:[],
   },
   {
@@ -648,7 +647,6 @@ function renderRoomTracks(){
     </div>`).join('');
 }
 function playTrack(idx){
-  const tracks = ROOMS[currentRoom].dates?.[currentDateIdx]?.tracks || [];
   if(playingIdx===idx){
     if(player.paused){player.play().catch(()=>{});playingIdx=idx;}
     else{player.pause();playingIdx=-1;}
@@ -659,8 +657,7 @@ function playTrack(idx){
     document.getElementById('np-cur').textContent='0:00';
   }
   renderRoomTracks();
-  const tracks = ROOMS[currentRoom].dates?.[currentDateIdx]?.tracks || [];
-  const np = document.getElementById('now-playing');
+const np = document.getElementById('now-playing');
 
 if(playingIdx>=0){
   np.style.display='flex';
