@@ -544,7 +544,7 @@ function openRoom(idx){
   document.getElementById('room-title').textContent=ROOMS[idx].title;
   document.getElementById('room-sub').textContent=ROOMS[idx].sub;
   document.getElementById('room-heart-count').textContent='❤️ '+ROOMS[idx].heartCount;
-  renderDateTabs(); renderRoomGallery(); renderRoomTracks(); renderRoomEmojis(); loadRoomComments();
+  renderDateTabs(); renderRoomGallery(); renderRoomTracks(); loadRoomReactions(); loadRoomComments();
   window.scrollTo(0,0);
 }
 function openCommunity(){
@@ -676,6 +676,7 @@ function selectDate(i){
   renderDateTabs();
   renderRoomGallery();
   renderRoomTracks();
+  loadRoomReactions();
   loadRoomComments();
 }
 
@@ -696,9 +697,40 @@ function renderRoomEmojis(){
       <span class="emo">${item.e}</span><span>${item.label}</span><span class="emoji-count">${item.count}</span>
     </button>`).join('');
 }
-function toggleRoomEmoji(i){
-  if(roomActiveEmojis.has(i)){roomActiveEmojis.delete(i);ROOMS[currentRoom].emojis[i].count--;}
-  else{roomActiveEmojis.add(i);ROOMS[currentRoom].emojis[i].count++;}
+async function toggleRoomEmoji(i){
+  const label = ROOMS[currentRoom].emojis[i].label;
+
+  await supabaseClient
+    .from('nicu_reactions')
+    .insert({
+      type: 'room',
+      room_idx: currentRoom,
+      date_idx: currentDateIdx,
+      key: label
+    });
+
+  loadRoomReactions();
+}
+  async function loadRoomReactions(){
+  const { data, error } = await supabaseClient
+    .from('nicu_reactions')
+    .select('key')
+    .eq('type', 'room')
+    .eq('room_idx', currentRoom)
+    .eq('date_idx', currentDateIdx);
+
+  if(error){
+    console.log(error);
+    return;
+  }
+
+  ROOMS[currentRoom].emojis.forEach(e => e.count = 0);
+
+  data.forEach(r => {
+    const idx = ROOMS[currentRoom].emojis.findIndex(e => e.label === r.key);
+    if(idx >= 0) ROOMS[currentRoom].emojis[idx].count++;
+  });
+
   renderRoomEmojis();
 }
 function addRoomHeart(){
