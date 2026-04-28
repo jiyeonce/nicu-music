@@ -552,6 +552,8 @@ function openCommunity(){
   document.getElementById('hub').style.display='none';
   document.getElementById('room').style.display='none';
   document.getElementById('community-page').style.display='block';
+  renderCommEmojis();
+  renderCommStories();
   loadCommReactions();
   loadCommStories();
   window.scrollTo(0,0);
@@ -615,9 +617,9 @@ function renderRoomTracks(){
       <div class="track-thumb" style="background:${THUMB_BG[i%THUMB_BG.length]}">${t.emoji}</div>
       <div class="track-info">
         <div class="track-name">${t.name}</div>
-        <div class="track-desc">${t.desc}${t.author?' · '+t.author:''}</div>
+        <div class="track-desc">${t.desc||''}${t.author?' · '+t.author:''}</div>
       </div>
-      <span class="track-dur">${t.duration}</span>
+      <span class="track-dur">${t.duration||''}</span>
       <a class="dl-btn${downloadedSet.has(currentRoom+'-'+i)?' done':''}" href="${t.file}" download="${t.name}.mp3" onclick="event.stopPropagation();markDownloaded(${i})">
         ${downloadedSet.has(currentRoom+'-'+i)
           ?'<svg viewBox="0 0 14 14"><polyline points="2,7 5.5,10.5 12,4"/></svg>'
@@ -697,75 +699,47 @@ function renderRoomEmojis(){
       <span class="emo">${item.e}</span><span>${item.label}</span><span class="emoji-count">${item.count}</span>
     </button>`).join('');
 }
+
 async function toggleRoomEmoji(i){
   const label = ROOMS[currentRoom].emojis[i].label;
-
-  await supabaseClient
+  const { error } = await supabaseClient
     .from('nicu_reactions')
-    .insert({
-      type: 'room',
-      room_idx: currentRoom,
-      date_idx: currentDateIdx,
-      key: label
-    });
-
+    .insert({ type:'room', room_idx:currentRoom, date_idx:currentDateIdx, key:label });
+  if(error){ console.error('emoji error:', error); return; }
   loadRoomReactions();
-}
-  async function loadRoomReactions(){
-  const { data, error } = await supabaseClient
-    .from('nicu_reactions')
-    .select('key')
-    .eq('type', 'room')
-    .eq('room_idx', currentRoom)
-    .eq('date_idx', currentDateIdx);
-
-  if(error){
-    console.log(error);
-    renderRoomEmojis();
-    return;
-  }
-
-  ROOMS[currentRoom].emojis.forEach(e => e.count = 0);
-  let heartCount = 0;
-
-  data.forEach(r => {
-    if(r.key === 'heart'){
-      heartCount++;
-      return;
-    }
-
-    const idx = ROOMS[currentRoom].emojis.findIndex(e => e.label === r.key);
-    if(idx >= 0) ROOMS[currentRoom].emojis[idx].count++;
-  });
-
-  ROOMS[currentRoom].heartCount = heartCount;
-  document.getElementById('room-heart-count').textContent = '❤️ ' + heartCount;
-
-  renderRoomEmojis();
 }
 
 async function addRoomHeart(){
   const btn=document.getElementById('room-heart-btn');
-  btn.classList.add('boom');
-  setTimeout(()=>btn.classList.remove('boom'),380);
-
+  btn.classList.add('boom');setTimeout(()=>btn.classList.remove('boom'),380);
   const { error } = await supabaseClient
     .from('nicu_reactions')
-    .insert({
-      type: 'room',
-      room_idx: currentRoom,
-      date_idx: currentDateIdx,
-      key: 'heart'
-    });
-
-  if(error){
-    console.log(error);
-    alert('하트 저장 실패 😢');
-    return;
-  }
-
+    .insert({ type:'room', room_idx:currentRoom, date_idx:currentDateIdx, key:'heart' });
+  if(error){ console.error('heart error:', error); return; }
   loadRoomReactions();
 }
+
+async function loadRoomReactions(){
+  const { data, error } = await supabaseClient
+    .from('nicu_reactions')
+    .select('key')
+    .eq('type','room')
+    .eq('room_idx', currentRoom)
+    .eq('date_idx', currentDateIdx);
+  if(error){ console.log(error); renderRoomEmojis(); return; }
+
+  ROOMS[currentRoom].emojis.forEach(e => e.count = 0);
+  let heartCount = 0;
+  data.forEach(r => {
+    if(r.key === 'heart'){ heartCount++; return; }
+    const idx = ROOMS[currentRoom].emojis.findIndex(e => e.label === r.key);
+    if(idx >= 0) ROOMS[currentRoom].emojis[idx].count++;
+  });
+  ROOMS[currentRoom].heartCount = heartCount;
+  document.getElementById('room-heart-count').textContent = '❤️ ' + heartCount;
+  renderRoomEmojis();
+}
+
 function renderRoomComments(){
   const comments=ROOMS[currentRoom].comments;
   const el=document.getElementById('room-comment-list');
