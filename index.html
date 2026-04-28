@@ -712,15 +712,23 @@ function renderRoomComments(){
   const el=document.getElementById('room-comment-list');
   if(!comments.length){el.innerHTML='<div class="list-empty">첫 번째 메시지를 남겨주세요 🌸</div>';return;}
   const colors=['#FFE4CC','#FFD6E8','#D4E8D0','#D6E4FF','#FFE8D4'];
-  el.innerHTML=comments.map((c,i)=>`
-    <div class="comment-item">
+  el.innerHTML=comments.map((c,i)=>{
+    const safeId=c.id;
+    return `<div class="comment-item">
       <div class="c-avatar" style="background:${colors[i%colors.length]}">${c.avatar}</div>
       <div style="flex:1">
         <div class="c-name">${c.name}</div>
         <div class="c-text">${c.text}</div>
-        <div class="c-time">${c.time}<button onclick="deleteComment('${c.id}')" style="margin-left:8px;border:none;background:transparent;cursor:pointer;font-size:13px;">🗑</button></div>
+        <div class="c-time">${c.time}
+          <button data-id="${c.id}" class="del-comment-btn" style="margin-left:8px;border:none;background:transparent;cursor:pointer;font-size:13px;">🗑</button>
+        </div>
       </div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
+  // 이벤트 바인딩
+  document.querySelectorAll('.del-comment-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>deleteComment(btn.dataset.id));
+  });
 }
 async function addRoomComment(){
   const t=document.getElementById('room-comment-input'),n=document.getElementById('room-name-input');
@@ -791,9 +799,14 @@ function renderCommStories(){
       <div style="flex:1">
         <span class="story-badge ${s.type==='news'?'badge-news':'badge-cheer'}">${s.type==='news'?'🎉 퇴원소식':'💪 응원해요'}</span>
         <div class="c-name">${s.name}</div><div class="c-text">${s.text}</div>
-        <div class="c-time">${s.time}<button onclick="deleteCommStory('${s.id}')" style="margin-left:8px;border:none;background:transparent;cursor:pointer;font-size:13px;">🗑</button></div>
+        <div class="c-time">${s.time}
+          <button data-id="${s.id}" class="del-story-btn" style="margin-left:8px;border:none;background:transparent;cursor:pointer;font-size:13px;">🗑</button>
+        </div>
       </div>
     </div>`).join('');
+  document.querySelectorAll('.del-story-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>deleteCommStory(btn.dataset.id));
+  });
 }
 async function addCommStory(){
   const t=document.getElementById('comm-comment-input'),n=document.getElementById('comm-name-input');
