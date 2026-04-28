@@ -744,15 +744,6 @@ async function toggleRoomEmoji(i){
   renderRoomEmojis();
 }
 
-  ROOMS[currentRoom].emojis.forEach(e => e.count = 0);
-
-  data.forEach(r => {
-    const idx = ROOMS[currentRoom].emojis.findIndex(e => e.label === r.key);
-    if(idx >= 0) ROOMS[currentRoom].emojis[idx].count++;
-  });
-
-  renderRoomEmojis();
-}
 async function addRoomHeart(){
   const btn=document.getElementById('room-heart-btn');
   btn.classList.add('boom');
