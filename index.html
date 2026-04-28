@@ -552,7 +552,8 @@ function openCommunity(){
   document.getElementById('hub').style.display='none';
   document.getElementById('room').style.display='none';
   document.getElementById('community-page').style.display='block';
-  renderCommEmojis(); renderCommStories();
+  loadCommReactions();
+  loadCommStories();
   window.scrollTo(0,0);
 }
 function goHub(){
@@ -772,16 +773,52 @@ function renderCommEmojis(){
       <span class="emo">${item.e}</span><span>${item.label}</span><span class="emoji-count">${item.count}</span>
     </button>`).join('');
 }
-function toggleCommEmoji(i){
-  if(commActiveEmojis.has(i)){commActiveEmojis.delete(i);COMM.emojis[i].count--;}
-  else{commActiveEmojis.add(i);COMM.emojis[i].count++;}
-  renderCommEmojis();
+async function toggleCommEmoji(i){
+  const label = COMM.emojis[i].label;
+  console.log('emoji clicked:', label, 'active:', commActiveEmojis.has(i));
+  if(commActiveEmojis.has(i)){
+    commActiveEmojis.delete(i);
+    const { error } = await supabaseClient.from('nicu_reactions')
+      .delete().eq('type','community').eq('key', label);
+    if(error) console.error('emoji delete error:', error);
+  } else {
+    commActiveEmojis.add(i);
+    const { data, error } = await supabaseClient.from('nicu_reactions')
+      .insert({ type:'community', key: label });
+    console.log('insert result:', data, error);
+    if(error) console.error('emoji insert error:', error);
+  }
+  loadCommReactions();
 }
-function addCommHeart(){
-  COMM.heartCount++;
+
+async function addCommHeart(){
   const btn=document.getElementById('comm-heart-btn');
   btn.classList.add('boom');setTimeout(()=>btn.classList.remove('boom'),380);
-  document.getElementById('comm-heart-count').textContent='❤️ '+COMM.heartCount;
+  const { data, error } = await supabaseClient.from('nicu_reactions')
+    .insert({ type:'community', key:'heart' });
+  console.log('heart insert:', data, error);
+  if(error) console.error('heart error:', error);
+  loadCommReactions();
+}
+
+async function loadCommReactions(){
+  const { data, error } = await supabaseClient
+    .from('nicu_reactions')
+    .select('key')
+    .eq('type','community');
+  if(error){ console.log(error); return; }
+
+  // 이모지 카운트
+  COMM.emojis.forEach(e => e.count = 0);
+  let heartCount = 0;
+  data.forEach(r => {
+    if(r.key === 'heart'){ heartCount++; return; }
+    const idx = COMM.emojis.findIndex(e => e.label === r.key);
+    if(idx >= 0) COMM.emojis[idx].count++;
+  });
+  COMM.heartCount = heartCount;
+  document.getElementById('comm-heart-count').textContent = '❤️ ' + heartCount.toLocaleString();
+  renderCommEmojis();
 }
 function selectType(type){
   selectedType=type;
