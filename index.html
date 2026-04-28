@@ -262,6 +262,11 @@ h1 span{color:var(--dusty-pink)}
     <div class="page-title" id="room-title"></div>
     <div class="page-sub" id="room-sub"></div>
   </div>
+  <div class="section" style="padding-bottom:.2rem">
+    <div class="section-label">📅 날짜 선택</div>
+    <div id="date-tabs" style="display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch;scrollbar-width:none"></div>
+  </div>
+
   <div class="section">
     <div class="section-label">📷 우리의 순간들</div>
     <div class="gallery-grid" id="room-gallery"></div>
@@ -361,7 +366,11 @@ h1 span{color:var(--dusty-pink)}
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+const SUPABASE_URL = 'https://aopuodrdxrulobwpfzfk.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvcHVvZHJkeHJ1bG9id3BmemZrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcyNjI3MzMsImV4cCI6MjA5MjgzODczM30.c5YufG71Zr3DZw8jzwfQvXZ6m4XiTQ160s-e26sdF7o';
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 /* ══════════════════════════════════════════
    ★ 데이터 설정 — 여기만 수정하면 돼요 ★
 ══════════════════════════════════════════ */
@@ -369,42 +378,111 @@ const ROOMS = [
   {
     title: '🎵 자장가 만들기 작업실',
     sub:   '아가에게 전하는 자장가 모음',
-    photos: [
-      { src:'images/nicu-image01.jpg', alt:'자장가 만들기01' },
-      { src:'images/nicu-image02.jpg', alt:'자장가 만들기02' },
-      { src:'images/nicu-image03.jpg', alt:'자장가 만들기03' },
-      { src:'images/nicu-image04.jpg', alt:'자장가 만들기04' },
-      // 사진 추가: { src:'images/파일명.jpg', alt:'설명' },
-    ],
-    tracks: [
-      { emoji:'⭐', name:'작은별(4명)',  author:'', duration:'', desc:'', file:'audio/twinkle.mp3'  },
-      { emoji:'⭐', name:'ㅅㅅㅇ자장가', author:'', duration:'', desc:'', file:'audio/mother01.mp3' },
-      { emoji:'⭐', name:'ㅅㅇㅎ자장가', author:'', duration:'', desc:'', file:'audio/mother02.mp3' },
-      { emoji:'⭐', name:'ㅇㅅㅎ자장가', author:'', duration:'', desc:'', file:'audio/mother03.mp3' },
-      { emoji:'⭐', name:'ㅇㅇㄹ자장가', author:'', duration:'', desc:'', file:'audio/mother04.mp3' },
-      // 트랙 추가: { emoji:'🌙', name:'곡 제목', author:'', duration:'', desc:'', file:'audio/파일명.wav' },
+    dates: [
+      {
+        label: '4/1',
+        photos: [
+          { src:'images/nicu-image01.jpg', alt:'자장가 만들기01' },
+          { src:'images/nicu-image02.jpg', alt:'자장가 만들기02' },
+          { src:'images/nicu-image03.jpg', alt:'자장가 만들기03' },
+          { src:'images/nicu-image04.jpg', alt:'자장가 만들기04' },
+          // 사진 추가: { src:'images/파일명.jpg', alt:'설명' },
+        ],
+        tracks: [
+          { emoji:'⭐', name:'작은별(4명)',  file:'audio/twinkle.mp3'  },
+          { emoji:'⭐', name:'ㅅㅅㅇ자장가', file:'audio/mother01.mp3' },
+          { emoji:'⭐', name:'ㅅㅇㅎ자장가', file:'audio/mother02.mp3' },
+          { emoji:'⭐', name:'ㅇㅅㅎ자장가', file:'audio/mother03.mp3' },
+          { emoji:'⭐', name:'ㅇㅇㄹ자장가', file:'audio/mother04.mp3' },
+          // 트랙 추가: { emoji:'⭐', name:'곡 제목', file:'audio/파일명.mp3' },
+        ],
+      },
+      {
+        label: '7/1',
+        photos: [
+          // 사진 추가: { src:'images/파일명.jpg', alt:'설명' },
+        ],
+        tracks: [
+          // 트랙 추가: { emoji:'⭐', name:'곡 제목', file:'audio/파일명.mp3' },
+        ],
+      },
+      {
+        label: '10/7',
+        photos: [
+          // 사진 추가: { src:'images/파일명.jpg', alt:'설명' },
+        ],
+        tracks: [
+          // 트랙 추가: { emoji:'⭐', name:'곡 제목', file:'audio/파일명.mp3' },
+        ],
+      },
     ],
     heartCount:0, emojis:[{e:'😢',label:'뭉클해요',count:0},{e:'🥰',label:'사랑스러워요',count:0},{e:'💪',label:'힘이 나요',count:0},{e:'🌟',label:'아름다워요',count:0}], comments:[],
   },
   {
     title: '🎠 음악모빌 만들기 작업실',
     sub:   '아가를 위한 음악모빌 소리',
-    photos: [
-      // 사진 추가: { src:'images/파일명.jpg', alt:'설명' },
-    ],
-    tracks: [
-      // 트랙 추가: { emoji:'🎠', name:'곡 제목', author:'', duration:'', desc:'', file:'audio/파일명.wav' },
+    dates: [
+      {
+        label: '5/6',
+        photos: [
+          // 사진 추가: { src:'images/파일명.jpg', alt:'설명' },
+        ],
+        tracks: [
+          // 트랙 추가: { emoji:'🎠', name:'곡 제목', file:'audio/파일명.mp3' },
+        ],
+      },
+      {
+        label: '8/5',
+        photos: [
+          // 사진 추가: { src:'images/파일명.jpg', alt:'설명' },
+        ],
+        tracks: [
+          // 트랙 추가: { emoji:'🎠', name:'곡 제목', file:'audio/파일명.mp3' },
+        ],
+      },
+      {
+        label: '11/4',
+        photos: [
+          // 사진 추가: { src:'images/파일명.jpg', alt:'설명' },
+        ],
+        tracks: [
+          // 트랙 추가: { emoji:'🎠', name:'곡 제목', file:'audio/파일명.mp3' },
+        ],
+      },
     ],
     heartCount:0, emojis:[{e:'😢',label:'뭉클해요',count:0},{e:'🥰',label:'사랑스러워요',count:0},{e:'💪',label:'힘이 나요',count:0},{e:'🌟',label:'아름다워요',count:0}], comments:[],
   },
   {
     title: '📖 사운드북 만들기 작업실',
     sub:   '함께 읽는 소리 그림책',
-    photos: [
-      // 사진 추가: { src:'images/파일명.jpg', alt:'설명' },
-    ],
-    tracks: [
-      // 트랙 추가: { emoji:'📖', name:'곡 제목', author:'', duration:'', desc:'', file:'audio/파일명.wav' },
+    dates: [
+      {
+        label: '6/10',
+        photos: [
+          // 사진 추가: { src:'images/파일명.jpg', alt:'설명' },
+        ],
+        tracks: [
+          // 트랙 추가: { emoji:'📖', name:'곡 제목', file:'audio/파일명.mp3' },
+        ],
+      },
+      {
+        label: '9/2',
+        photos: [
+          // 사진 추가: { src:'images/파일명.jpg', alt:'설명' },
+        ],
+        tracks: [
+          // 트랙 추가: { emoji:'📖', name:'곡 제목', file:'audio/파일명.mp3' },
+        ],
+      },
+      {
+        label: '12/2',
+        photos: [
+          // 사진 추가: { src:'images/파일명.jpg', alt:'설명' },
+        ],
+        tracks: [
+          // 트랙 추가: { emoji:'📖', name:'곡 제목', file:'audio/파일명.mp3' },
+        ],
+      },
     ],
     heartCount:0, emojis:[{e:'😢',label:'뭉클해요',count:0},{e:'🥰',label:'사랑스러워요',count:0},{e:'💪',label:'힘이 나요',count:0},{e:'🌟',label:'아름다워요',count:0}], comments:[],
   },
@@ -420,7 +498,7 @@ const COMM = {
 const PASSCODE = 'nicu';
 
 /* ══ 상태 ══ */
-let currentRoom=0, playingIdx=-1;
+let currentRoom=0, playingIdx=-1, currentDateIdx=0;
 let roomActiveEmojis=new Set(), commActiveEmojis=new Set();
 let selectedType='cheer', lbIdx=0, bgmPlaying=false;
 const downloadedSet=new Set();
@@ -462,10 +540,11 @@ function openRoom(idx){
   document.getElementById('hub').style.display='none';
   document.getElementById('room').style.display='block';
   document.getElementById('community-page').style.display='none';
+  currentDateIdx=0;
   document.getElementById('room-title').textContent=ROOMS[idx].title;
   document.getElementById('room-sub').textContent=ROOMS[idx].sub;
   document.getElementById('room-heart-count').textContent='❤️ '+ROOMS[idx].heartCount;
-  renderRoomGallery(); renderRoomTracks(); renderRoomEmojis(); renderRoomComments();
+  renderDateTabs(); renderRoomGallery(); renderRoomTracks(); renderRoomEmojis(); loadRoomComments();
   window.scrollTo(0,0);
 }
 function openCommunity(){
@@ -485,18 +564,24 @@ function goHub(){
   window.scrollTo(0,0);
 }
 
+function currentPhotos(){ return ROOMS[currentRoom].dates[currentDateIdx]?.photos || []; }
+function currentTracks(){ return ROOMS[currentRoom].dates[currentDateIdx]?.tracks || []; }
+
 function renderRoomGallery(){
-  const photos=ROOMS[currentRoom].photos;
+  const photos=currentPhotos();
   const el=document.getElementById('room-gallery');
-  if(!photos.length){el.innerHTML='';return;}
+  if(!photos.length){el.innerHTML='<p style="font-size:13px;color:var(--text-light);text-align:center;padding:1rem 0;grid-column:1/-1">사진이 없어요 📷</p>';return;}
   el.innerHTML=photos.map((p,i)=>`
     <div class="gallery-item" onclick="openLightbox(${i})">
       <img src="${p.src}" alt="${p.alt}" loading="lazy" onerror="this.parentElement.style.background='#FFE4CC';this.style.display='none'">
     </div>`).join('');
 }
-function openLightbox(idx){lbIdx=idx;document.getElementById('lb-img').src=ROOMS[currentRoom].photos[idx].src;document.getElementById('lightbox').classList.add('open');}
+function openLightbox(idx){
+  const photos=currentPhotos();
+  lbIdx=idx;document.getElementById('lb-img').src=photos[idx].src;document.getElementById('lightbox').classList.add('open');
+}
 function closeLightbox(){document.getElementById('lightbox').classList.remove('open');}
-function navLightbox(dir){const p=ROOMS[currentRoom].photos;lbIdx=(lbIdx+dir+p.length)%p.length;document.getElementById('lb-img').src=p[lbIdx].src;}
+function navLightbox(dir){const p=currentPhotos();lbIdx=(lbIdx+dir+p.length)%p.length;document.getElementById('lb-img').src=p[lbIdx].src;}
 document.getElementById('lightbox').addEventListener('click',function(e){if(e.target===this)closeLightbox();});
 document.addEventListener('keydown',e=>{
   if(!document.getElementById('lightbox').classList.contains('open'))return;
@@ -520,7 +605,7 @@ player.addEventListener('ended',()=>{playingIdx=-1;renderRoomTracks();document.g
 function seekTrack(val){if(player.duration)player.currentTime=(val/100)*player.duration;}
 
 function renderRoomTracks(){
-  const tracks=ROOMS[currentRoom].tracks;
+  const tracks=currentTracks();
   const el=document.getElementById('room-tracks');
   if(!tracks.length){el.innerHTML='<p style="font-size:13px;color:var(--text-light);text-align:center;padding:1rem 0">준비 중이에요 🎵</p>';return;}
   el.innerHTML=tracks.map((t,i)=>`
@@ -545,7 +630,7 @@ function renderRoomTracks(){
     </div>`).join('');
 }
 function playTrack(idx){
-  const tracks=ROOMS[currentRoom].tracks;
+  const tracks=currentTracks();
   if(playingIdx===idx){
     if(player.paused){player.play().catch(()=>{});playingIdx=idx;}
     else{player.pause();playingIdx=-1;}
@@ -565,6 +650,33 @@ function playTrack(idx){
   }else{np.style.display='none';}
 }
 function markDownloaded(i){downloadedSet.add(currentRoom+'-'+i);setTimeout(()=>renderRoomTracks(),400);}
+
+/* ══ 날짜탭 ══ */
+function renderDateTabs(){
+  const dates=ROOMS[currentRoom].dates||[];
+  const el=document.getElementById('date-tabs');
+  if(!dates.length){el.innerHTML='';return;}
+  el.innerHTML=dates.map((d,i)=>`
+    <button onclick="selectDate(${i})" style="
+      flex-shrink:0;padding:7px 16px;border-radius:20px;cursor:pointer;
+      font-family:'Noto Sans KR',sans-serif;font-size:12px;transition:all .2s;
+      border:1.5px solid ${currentDateIdx===i?'#C97B7B':'rgba(200,160,140,.25)'};
+      background:${currentDateIdx===i?'#FFF0E8':'#fff'};
+      color:${currentDateIdx===i?'#3D2B1F':'#A08070'};
+      font-weight:${currentDateIdx===i?'500':'400'};
+    ">${d.label}</button>`).join('');
+}
+
+function selectDate(i){
+  currentDateIdx=i;
+  playingIdx=-1;
+  player.pause();
+  document.getElementById('now-playing').style.display='none';
+  renderDateTabs();
+  renderRoomGallery();
+  renderRoomTracks();
+  loadRoomComments();
+}
 
 /* ══ 댓글 삭제 ══ */
 async function deleteComment(id){
@@ -603,15 +715,47 @@ function renderRoomComments(){
   el.innerHTML=comments.map((c,i)=>`
     <div class="comment-item">
       <div class="c-avatar" style="background:${colors[i%colors.length]}">${c.avatar}</div>
-      <div><div class="c-name">${c.name}</div><div class="c-text">${c.text}</div><div class="c-time">${c.time}</div></div>
+      <div style="flex:1">
+        <div class="c-name">${c.name}</div>
+        <div class="c-text">${c.text}</div>
+        <div class="c-time">${c.time}<button onclick="deleteComment('${c.id}')" style="margin-left:8px;border:none;background:transparent;cursor:pointer;font-size:13px;">🗑</button></div>
+      </div>
     </div>`).join('');
 }
-function addRoomComment(){
+async function addRoomComment(){
   const t=document.getElementById('room-comment-input'),n=document.getElementById('room-name-input');
   const text=t.value.trim();if(!text){t.focus();return;}
   const av=['🌷','🌸','🌹','🌺','🌻','🌼','💐'];
-  ROOMS[currentRoom].comments.unshift({avatar:av[Math.floor(Math.random()*av.length)],name:n.value.trim()||'익명의 방문자',text,time:'방금 전'});
-  t.value='';n.value='';renderRoomComments();
+  const avatar=av[Math.floor(Math.random()*av.length)];
+  const name=n.value.trim()||'익명의 방문자';
+
+  const { error } = await supabaseClient
+    .from('nicu_comments')
+    .insert({ room_idx: currentRoom, date_idx: currentDateIdx, name, text, avatar });
+
+  if(error){ alert('저장 실패 😢'); console.log(error); return; }
+  t.value=''; n.value='';
+  loadRoomComments();
+}
+
+async function loadRoomComments(){
+  const { data, error } = await supabaseClient
+    .from('nicu_comments')
+    .select('*')
+    .eq('room_idx', currentRoom)
+    .eq('date_idx', currentDateIdx)
+    .order('created_at', { ascending: false });
+
+  if(error){ console.log(error); return; }
+
+  ROOMS[currentRoom].comments = data.map(c => ({
+    id: c.id,
+    avatar: c.avatar,
+    name: c.name,
+    text: c.text,
+    time: new Date(c.created_at).toLocaleString('ko-KR', {month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'})
+  }));
+  renderRoomComments();
 }
 
 function renderCommEmojis(){
