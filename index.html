@@ -6,34 +6,14 @@
 <title>우리의 음악작업실</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600&family=Noto+Sans+KR:wght@300;400;500&display=swap');
-
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{width:100%;overflow-x:hidden;scroll-behavior:smooth}
-:root{
-  --cream:#FFF8F0;--peach:#FFE4CC;
-  --dusty-pink:#C97B7B;--soft-teal:#5B9B8E;
-  --text-dark:#3D2B1F;--text-mid:#6B4E3D;--text-light:#A08070;
-}
+:root{--cream:#FFF8F0;--peach:#FFE4CC;--dusty-pink:#C97B7B;--soft-teal:#5B9B8E;--text-dark:#3D2B1F;--text-mid:#6B4E3D;--text-light:#A08070;}
 body{font-family:'Noto Sans KR',sans-serif;background:var(--cream);color:var(--text-dark);min-height:100vh}
-
-/* ── BGM ── */
-#bgm-toggle{
-  position:fixed;bottom:5rem;right:1.2rem;z-index:200;
-  width:44px;height:44px;border-radius:50%;
-  background:linear-gradient(135deg,#C97B7B,#E8A89A);
-  border:none;color:#fff;font-size:18px;cursor:pointer;
-  box-shadow:0 3px 14px rgba(201,123,123,.4);
-  display:flex;align-items:center;justify-content:center;
-}
+#bgm-toggle{position:fixed;bottom:5rem;right:1.2rem;z-index:200;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#C97B7B,#E8A89A);border:none;color:#fff;font-size:18px;cursor:pointer;box-shadow:0 3px 14px rgba(201,123,123,.4);display:flex;align-items:center;justify-content:center;}
 #bgm-toggle.playing{animation:bgmPulse 2s infinite}
 @keyframes bgmPulse{0%,100%{box-shadow:0 3px 14px rgba(201,123,123,.4)}50%{box-shadow:0 3px 22px rgba(201,123,123,.7)}}
-
-/* ── PASSWORD GATE ── */
-#gate{
-  position:fixed;inset:0;z-index:500;
-  background:linear-gradient(160deg,#FFF8F0 0%,#FFE8D8 50%,#FFD6E8 100%);
-  display:flex;align-items:center;justify-content:center;padding:1.5rem;
-}
+#gate{position:fixed;inset:0;z-index:500;background:linear-gradient(160deg,#FFF8F0 0%,#FFE8D8 50%,#FFD6E8 100%);display:flex;align-items:center;justify-content:center;padding:1.5rem;}
 .gate-box{background:#fff;border-radius:24px;padding:2.2rem 2rem;border:1px solid rgba(200,160,140,.2);box-shadow:0 8px 40px rgba(201,123,123,.12);width:min(340px,90vw);text-align:center}
 .gate-emoji{font-size:40px;margin-bottom:1rem;display:block}
 .gate-title{font-family:'Noto Serif KR',serif;font-size:1.3rem;color:var(--text-dark);margin-bottom:.4rem}
@@ -44,12 +24,10 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--cream);color:var(--t
 .gate-btn:active{transform:scale(.98)}
 .gate-error{font-size:12px;color:#C97B7B;margin-top:.5rem;display:none}
 .gate-error.show{display:block}
-
-/* ── LANDING ── */
 #landing{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1.5rem 1rem 2rem;position:relative;text-align:center;background:linear-gradient(160deg,#FFF8F0 0%,#FFE8D8 50%,#FFD6E8 100%);overflow:hidden}
 #landing::before{content:'';position:absolute;inset:0;pointer-events:none;background-image:radial-gradient(circle at 20% 20%,rgba(255,200,180,.3) 0%,transparent 50%),radial-gradient(circle at 80% 80%,rgba(180,220,210,.3) 0%,transparent 50%)}
-.visitor-badge{position:absolute;top:1rem;right:1rem;background:rgba(255,255,255,.75);backdrop-filter:blur(8px);border:1px solid rgba(200,160,140,.3);border-radius:20px;padding:.35rem .9rem;font-size:11px;color:var(--text-mid);display:flex;align-items:center;gap:5px;z-index:2}
-.visitor-dot{width:6px;height:6px;border-radius:50%;background:#5B9B8E;animation:pulse 2s infinite}
+
+
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(1.3)}}
 .note-float{position:absolute;font-size:16px;opacity:0;animation:floatNote 4s ease-in-out infinite;pointer-events:none}
 @keyframes floatNote{0%{opacity:0;transform:translateY(0) rotate(-10deg)}20%{opacity:.7}80%{opacity:.4}100%{opacity:0;transform:translateY(-55px) rotate(10deg)}}
@@ -63,8 +41,6 @@ h1 span{color:var(--dusty-pink)}
 .tagline{font-size:13px;color:var(--text-light);margin-bottom:2rem;line-height:1.9}
 .enter-btn{background:linear-gradient(135deg,#C97B7B,#E8A89A);color:#fff;border:none;padding:.85rem 2.2rem;border-radius:50px;font-family:'Noto Sans KR',sans-serif;font-size:15px;font-weight:500;cursor:pointer;box-shadow:0 4px 18px rgba(201,123,123,.35);min-height:48px}
 .enter-btn:active{transform:scale(.97)}
-
-/* ── HUB ── */
 #hub{display:none;min-height:100vh;min-height:100dvh;background:linear-gradient(160deg,#FFF8F0 0%,#FFE8D8 60%,#FFD6E8 100%);padding:2rem 1rem 3rem}
 .hub-header{text-align:center;margin-bottom:2rem;padding-top:1rem}
 .hub-title{font-family:'Noto Serif KR',serif;font-size:clamp(1.3rem,5vw,1.8rem);color:var(--text-dark);margin-bottom:.4rem}
@@ -80,16 +56,12 @@ h1 span{color:var(--dusty-pink)}
 .room-emoji{font-size:36px;margin-bottom:.7rem;display:block}
 .room-name{font-family:'Noto Serif KR',serif;font-size:14px;font-weight:600;color:var(--text-dark);line-height:1.5;margin-bottom:.3rem}
 .room-desc{font-size:11px;color:var(--text-light);line-height:1.6}
-
-/* ── ROOM / COMMUNITY ── */
 #room{display:none;min-height:100vh;background:var(--cream);padding-bottom:110px}
 #community-page{display:none;min-height:100vh;background:var(--cream);padding-bottom:3rem}
 .page-header{background:linear-gradient(135deg,#FFE4CC 0%,#FFD6E8 100%);padding:3rem 1.2rem 1.2rem;text-align:center;border-bottom:1px solid rgba(200,160,140,.2);position:relative}
 .back-btn{position:absolute;left:.9rem;top:.9rem;background:rgba(255,255,255,.65);border:1px solid rgba(200,160,140,.3);border-radius:20px;padding:6px 14px;font-size:12px;color:var(--text-mid);cursor:pointer;font-family:'Noto Sans KR',sans-serif;min-height:36px}
 .page-title{font-family:'Noto Serif KR',serif;font-size:clamp(1.1rem,4vw,1.4rem);color:var(--text-dark);margin-bottom:.2rem}
 .page-sub{font-size:11px;color:var(--text-light)}
-
-/* ── GALLERY ── */
 .section{padding:1.2rem 1rem .8rem}
 .section-label{font-size:10px;letter-spacing:2px;color:var(--text-light);margin-bottom:.8rem;text-transform:uppercase}
 .gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
@@ -97,8 +69,6 @@ h1 span{color:var(--dusty-pink)}
 .gallery-item{aspect-ratio:1/1;border-radius:12px;overflow:hidden;cursor:pointer;position:relative;background:var(--peach)}
 .gallery-item img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s}
 .gallery-item:hover img{transform:scale(1.06)}
-
-/* ── LIGHTBOX ── */
 #lightbox{display:none;position:fixed;inset:0;z-index:300;background:rgba(30,15,10,.88);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:1rem}
 #lightbox.open{display:flex}
 #lightbox img{max-width:min(90vw,600px);max-height:85vh;border-radius:16px;object-fit:contain;animation:lbIn .25s ease}
@@ -106,8 +76,6 @@ h1 span{color:var(--dusty-pink)}
 .lb-close{position:absolute;top:1rem;right:1rem;background:rgba(255,255,255,.18);border:none;color:#fff;font-size:22px;width:40px;height:40px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center}
 .lb-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.18);border:none;color:#fff;font-size:20px;width:40px;height:40px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center}
 .lb-prev{left:1rem}.lb-next{right:1rem}
-
-/* ── TRACKS ── */
 .track-item{display:flex;align-items:center;gap:10px;padding:11px 12px;background:#fff;border-radius:14px;margin-bottom:8px;border:1px solid rgba(200,160,140,.15);cursor:pointer;position:relative;overflow:hidden;min-height:64px}
 .track-item::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(180deg,#C97B7B,#FFB8A0);border-radius:3px 0 0 3px;opacity:0;transition:opacity .25s}
 .track-item:active{background:#FFF5F0}
@@ -129,8 +97,6 @@ h1 span{color:var(--dusty-pink)}
 .play-icon{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#C97B7B,#E8A89A);display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .play-icon svg{width:11px;height:11px;fill:#fff;margin-left:2px}
 .play-icon.pause-icon svg{margin-left:0}
-
-/* ── NOW PLAYING ── */
 .now-playing{display:none;position:fixed;bottom:0;left:0;right:0;background:rgba(255,248,240,.96);backdrop-filter:blur(14px);border-top:1px solid rgba(200,160,140,.25);padding:.6rem 3.5rem .6rem 1rem;flex-direction:column;gap:6px;z-index:100}
 .np-top{display:flex;align-items:center;gap:10px}
 .np-thumb{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:17px;background:#FFE4CC;flex-shrink:0}
@@ -150,8 +116,6 @@ h1 span{color:var(--dusty-pink)}
 .np-seek{flex:1;-webkit-appearance:none;appearance:none;height:3px;border-radius:2px;outline:none;cursor:pointer;background:rgba(200,160,140,.25)}
 .np-seek::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:#C97B7B;cursor:pointer;box-shadow:0 1px 4px rgba(201,123,123,.4)}
 .np-seek::-moz-range-thumb{width:14px;height:14px;border-radius:50%;border:none;background:#C97B7B;cursor:pointer}
-
-/* ── 공통 박스 ── */
 .reactions-box,.comments-box,.story-box{background:#fff;border-radius:16px;padding:1rem;border:1px solid rgba(200,160,140,.15)}
 .box-title{font-size:11px;color:var(--text-light);margin-bottom:.9rem;letter-spacing:1px}
 .emoji-row{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:1rem}
@@ -166,8 +130,6 @@ h1 span{color:var(--dusty-pink)}
 .heart-btn.boom{animation:heartBoom .35s ease}
 @keyframes heartBoom{0%{transform:scale(1)}50%{transform:scale(1.3)}100%{transform:scale(1)}}
 .heart-count{font-size:15px;color:var(--dusty-pink);font-weight:500}
-
-/* ── 댓글/메시지 ── */
 .name-input-row{margin-bottom:7px}
 .name-input{width:100%;border:1.5px solid rgba(200,160,140,.25);border-radius:10px;padding:8px 12px;font-family:'Noto Sans KR',sans-serif;font-size:13px;color:var(--text-dark);background:var(--cream);outline:none;transition:border-color .2s;-webkit-appearance:none;min-height:36px}
 .name-input:focus{border-color:rgba(201,123,123,.5)}
@@ -185,8 +147,6 @@ h1 span{color:var(--dusty-pink)}
 .c-text{font-size:13px;color:var(--text-dark);line-height:1.65}
 .c-time{font-size:10px;color:var(--text-light);margin-top:3px}
 .list-empty{font-size:13px;color:var(--text-light);text-align:center;padding:1rem 0}
-
-/* ── 우리들의 이야기 글 유형 ── */
 .type-row{display:flex;gap:8px;margin-bottom:10px}
 .type-btn{flex:1;padding:8px 6px;border-radius:10px;border:1.5px solid rgba(200,160,140,.2);background:var(--cream);font-family:'Noto Sans KR',sans-serif;font-size:12px;color:var(--text-mid);cursor:pointer;transition:all .2s;text-align:center}
 .type-btn.selected{background:#FFF0E8;border-color:#C97B7B;color:var(--text-dark);font-weight:500}
@@ -194,32 +154,23 @@ h1 span{color:var(--dusty-pink)}
 .badge-cheer{background:#FFF0E8;color:#C97B7B}
 .badge-news{background:#E8F8F0;color:#5B9B8E}
 </style>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>  
 </head>
 <body>
-
 <audio id="bgm" loop preload="none"><source src="audio/bgm.mp3" type="audio/mpeg"></audio>
 <button id="bgm-toggle" onclick="toggleBGM()" title="배경음악">🎵</button>
 
-<!-- 비밀번호 게이트 -->
 <div id="gate">
   <div class="gate-box">
     <span class="gate-emoji">🎵</span>
     <div class="gate-title">우리의 음악작업실</div>
     <div class="gate-sub">NICU 부모님들과 함께하는<br>소중한 공간이에요<br><br>입장 코드를 입력해주세요</div>
-    <input class="gate-input" id="gate-input" type="password" placeholder="· · · ·" maxlength="10"
-           onkeydown="if(event.key==='Enter') checkPassword()">
+    <input class="gate-input" id="gate-input" type="password" placeholder="· · · ·" maxlength="10" onkeydown="if(event.key==='Enter') checkPassword()">
     <button class="gate-btn" onclick="checkPassword()">입장하기 →</button>
     <div class="gate-error" id="gate-error">입장 코드가 맞지 않아요 🌸</div>
   </div>
 </div>
 
-<!-- 랜딩 -->
 <div id="landing">
-  <div class="visitor-badge">
-    <span class="visitor-dot"></span>
-    <span id="visitor-count">0</span>명이 다녀갔어요
-  </div>
   <span class="note-float" style="top:12%;left:6%;animation-delay:0s">♩</span>
   <span class="note-float" style="top:22%;right:8%;animation-delay:1.2s">♪</span>
   <span class="note-float" style="top:55%;left:4%;animation-delay:2.5s">♫</span>
@@ -276,7 +227,6 @@ h1 span{color:var(--dusty-pink)}
   </div>
 </div>
 
-<!-- 허브 -->
 <div id="hub">
   <div class="hub-header">
     <div class="hub-title">작업실을 선택해주세요</div>
@@ -306,34 +256,26 @@ h1 span{color:var(--dusty-pink)}
   </div>
 </div>
 
-<!-- 작업실 -->
 <div id="room">
   <div class="page-header">
     <button class="back-btn" onclick="goHub()">← 돌아가기</button>
     <div class="page-title" id="room-title"></div>
     <div class="page-sub" id="room-sub"></div>
   </div>
-<div class="section" style="padding-bottom:.2rem">
-  <div class="section-label">📅 날짜 선택</div>
-  <div id="date-tabs" style="display:flex;gap:8px;overflow-x:auto;padding-bottom:4px"></div>
-</div>
   <div class="section">
     <div class="section-label">📷 우리의 순간들</div>
     <div class="gallery-grid" id="room-gallery"></div>
   </div>
-
   <div id="lightbox">
     <button class="lb-close" onclick="closeLightbox()">✕</button>
     <button class="lb-nav lb-prev" onclick="navLightbox(-1)">‹</button>
     <img id="lb-img" src="" alt="사진">
     <button class="lb-nav lb-next" onclick="navLightbox(1)">›</button>
   </div>
-
   <div class="section" style="padding-top:.4rem">
     <div class="section-label">🎼 트랙 리스트</div>
     <div id="room-tracks"></div>
   </div>
-
   <div class="section" style="padding-top:.4rem">
     <div class="reactions-box">
       <div class="box-title">REACT · 함께 느껴요</div>
@@ -344,7 +286,6 @@ h1 span{color:var(--dusty-pink)}
       </div>
     </div>
   </div>
-
   <div class="section" style="padding-top:.4rem;padding-bottom:1.5rem">
     <div class="comments-box">
       <div class="box-title">💬 메시지 남기기</div>
@@ -361,7 +302,6 @@ h1 span{color:var(--dusty-pink)}
       <div id="room-comment-list"></div>
     </div>
   </div>
-
   <div class="now-playing" id="now-playing">
     <div class="np-top">
       <div class="np-thumb" id="np-thumb">🎵</div>
@@ -383,14 +323,12 @@ h1 span{color:var(--dusty-pink)}
   </div>
 </div>
 
-<!-- 우리들의 이야기 -->
 <div id="community-page">
   <div class="page-header">
     <button class="back-btn" onclick="goHub()">← 돌아가기</button>
     <div class="page-title">💕 우리들의 이야기</div>
     <div class="page-sub">서로 응원하고 소식을 나누어요</div>
   </div>
-
   <div class="section">
     <div class="reactions-box">
       <div class="box-title">REACT · 오늘 우리의 마음</div>
@@ -401,7 +339,6 @@ h1 span{color:var(--dusty-pink)}
       </div>
     </div>
   </div>
-
   <div class="section" style="padding-top:.4rem;padding-bottom:2rem">
     <div class="story-box">
       <div class="box-title">✍️ 응원 · 소식 남기기</div>
@@ -425,10 +362,6 @@ h1 span{color:var(--dusty-pink)}
 </div>
 
 <script>
-const SUPABASE_URL = 'https://aopuodrdxrulobwpfzfk.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvcHVvZHJkeHJ1bG9id3BmemZrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcyNjI3MzMsImV4cCI6MjA5MjgzODczM30.c5YufG71Zr3DZw8jzwfQvXZ6m4XiTQ160s-e26sdF7o';
-
-const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);    
 /* ══════════════════════════════════════════
    ★ 데이터 설정 — 여기만 수정하면 돼요 ★
 ══════════════════════════════════════════ */
@@ -436,30 +369,21 @@ const ROOMS = [
   {
     title: '🎵 자장가 만들기 작업실',
     sub:   '아가에게 전하는 자장가 모음',
-    dates: [
-  {
-    label: '4월 10일',
     photos: [
-      { src: 'images/nicu-image01.jpg', alt: '자장가1' },
-      { src: 'images/nicu-image02.jpg', alt: '자장가2' },
+      { src:'images/nicu-image01.jpg', alt:'자장가 만들기01' },
+      { src:'images/nicu-image02.jpg', alt:'자장가 만들기02' },
+      { src:'images/nicu-image03.jpg', alt:'자장가 만들기03' },
+      { src:'images/nicu-image04.jpg', alt:'자장가 만들기04' },
+      // 사진 추가: { src:'images/파일명.jpg', alt:'설명' },
     ],
     tracks: [
-      { emoji:'⭐', name:'작은별(4명)', file:'audio/twinkle.mp3' },
-      { emoji:'⭐', name:'ㅅㅅㅇ자장가', file:'audio/mother01.mp3' },
-    ]
-  },
-  {
-    label: '4월 17일',
-    photos: [
-      { src: 'images/nicu-image03.jpg', alt: '자장가3' },
+      { emoji:'⭐', name:'작은별(4명)',  author:'', duration:'', desc:'', file:'audio/twinkle.mp3'  },
+      { emoji:'⭐', name:'ㅅㅅㅇ자장가', author:'', duration:'', desc:'', file:'audio/mother01.mp3' },
+      { emoji:'⭐', name:'ㅅㅇㅎ자장가', author:'', duration:'', desc:'', file:'audio/mother02.mp3' },
+      { emoji:'⭐', name:'ㅇㅅㅎ자장가', author:'', duration:'', desc:'', file:'audio/mother03.mp3' },
+      { emoji:'⭐', name:'ㅇㅇㄹ자장가', author:'', duration:'', desc:'', file:'audio/mother04.mp3' },
+      // 트랙 추가: { emoji:'🌙', name:'곡 제목', author:'', duration:'', desc:'', file:'audio/파일명.wav' },
     ],
-    tracks: [
-      { emoji:'⭐', name:'ㅇㅅㅎ자장가', file:'audio/mother03.mp3' },
-    ]
-  }
-],
-
-      // 트랙 추가...
     heartCount:0, emojis:[{e:'😢',label:'뭉클해요',count:0},{e:'🥰',label:'사랑스러워요',count:0},{e:'💪',label:'힘이 나요',count:0},{e:'🌟',label:'아름다워요',count:0}], comments:[],
   },
   {
@@ -469,7 +393,7 @@ const ROOMS = [
       // 사진 추가: { src:'images/파일명.jpg', alt:'설명' },
     ],
     tracks: [
-      // 트랙 추가: { emoji:'🎠', name:'곡 제목', author:'', duration:'', desc:'', file:'audio/파일명.mp3' },
+      // 트랙 추가: { emoji:'🎠', name:'곡 제목', author:'', duration:'', desc:'', file:'audio/파일명.wav' },
     ],
     heartCount:0, emojis:[{e:'😢',label:'뭉클해요',count:0},{e:'🥰',label:'사랑스러워요',count:0},{e:'💪',label:'힘이 나요',count:0},{e:'🌟',label:'아름다워요',count:0}], comments:[],
   },
@@ -480,7 +404,7 @@ const ROOMS = [
       // 사진 추가: { src:'images/파일명.jpg', alt:'설명' },
     ],
     tracks: [
-      // 트랙 추가: { emoji:'📖', name:'곡 제목', author:'', duration:'', desc:'', file:'audio/파일명.mp3' },
+      // 트랙 추가: { emoji:'📖', name:'곡 제목', author:'', duration:'', desc:'', file:'audio/파일명.wav' },
     ],
     heartCount:0, emojis:[{e:'😢',label:'뭉클해요',count:0},{e:'🥰',label:'사랑스러워요',count:0},{e:'💪',label:'힘이 나요',count:0},{e:'🌟',label:'아름다워요',count:0}], comments:[],
   },
@@ -492,49 +416,39 @@ const COMM = {
   stories:[],
 };
 
-/* ══ 비밀번호 — 여기서 바꾸세요 ══ */
+/* ══ 비밀번호 ══ */
 const PASSCODE = 'nicu';
 
 /* ══ 상태 ══ */
-let currentRoom = 0, playingIdx = -1;
-let currentDateIdx = 0;  
-let roomActiveEmojis = new Set(), commActiveEmojis = new Set();
-let selectedType = 'cheer', lbIdx = 0, bgmPlaying = false;
-const downloadedSet = new Set();
-const THUMB_BG = ['#FFE4CC','#FFD6E8','#D4E8D0','#D6E4FF','#FFE4D6','#E4D6FF'];
+let currentRoom=0, playingIdx=-1;
+let roomActiveEmojis=new Set(), commActiveEmojis=new Set();
+let selectedType='cheer', lbIdx=0, bgmPlaying=false;
+const downloadedSet=new Set();
+const THUMB_BG=['#FFE4CC','#FFD6E8','#D4E8D0','#D6E4FF','#FFE4D6','#E4D6FF'];
 
-/* ══ 게이트 ══ */
-function checkPassword() {
-  const val = document.getElementById('gate-input').value;
-  const err = document.getElementById('gate-error');
-  if (val === PASSCODE) {
-    document.getElementById('gate').style.display = 'none';
-    try { sessionStorage.setItem('nicu_auth','1'); } catch(e) {}
-  } else {
+function checkPassword(){
+  const val=document.getElementById('gate-input').value;
+  const err=document.getElementById('gate-error');
+  if(val===PASSCODE){
+    document.getElementById('gate').style.display='none';
+    try{sessionStorage.setItem('nicu_auth','1');}catch(e){}
+  }else{
     err.classList.add('show');
-    document.getElementById('gate-input').value = '';
+    document.getElementById('gate-input').value='';
     document.getElementById('gate-input').focus();
-    setTimeout(() => err.classList.remove('show'), 2500);
+    setTimeout(()=>err.classList.remove('show'),2500);
   }
 }
-try { if (sessionStorage.getItem('nicu_auth')==='1') document.getElementById('gate').style.display='none'; } catch(e) {}
+try{if(sessionStorage.getItem('nicu_auth')==='1')document.getElementById('gate').style.display='none';}catch(e){}
 
-/* ══ 방문자 ══ */
-(function(){
-  let v=0;
-  try{v=parseInt(localStorage.getItem('nicu_v')||'0')+1;localStorage.setItem('nicu_v',v);}catch(e){}
-  document.getElementById('visitor-count').textContent=v.toLocaleString();
-})();
 
-/* ══ BGM ══ */
+
 function toggleBGM(){
   const a=document.getElementById('bgm'),b=document.getElementById('bgm-toggle');
   if(bgmPlaying){a.pause();b.textContent='🎵';b.classList.remove('playing');}
   else{a.play().catch(()=>{});b.textContent='🔇';b.classList.add('playing');}
   bgmPlaying=!bgmPlaying;
 }
-
-/* ══ 페이지 전환 ══ */
 function openHub(){
   document.getElementById('landing').style.display='none';
   document.getElementById('hub').style.display='block';
@@ -543,12 +457,7 @@ function openHub(){
   window.scrollTo(0,0);
 }
 function openRoom(idx){
-  currentRoom=idx;
-  playingIdx=-1;
-  currentDateIdx = 0;
-
-  roomActiveEmojis=new Set();
-  
+  currentRoom=idx; playingIdx=-1; roomActiveEmojis=new Set();
   document.getElementById('now-playing').style.display='none';
   document.getElementById('hub').style.display='none';
   document.getElementById('room').style.display='block';
@@ -556,13 +465,7 @@ function openRoom(idx){
   document.getElementById('room-title').textContent=ROOMS[idx].title;
   document.getElementById('room-sub').textContent=ROOMS[idx].sub;
   document.getElementById('room-heart-count').textContent='❤️ '+ROOMS[idx].heartCount;
-  
-renderDateTabs();
-renderRoomGallery();
-renderRoomTracks();
-renderRoomEmojis();
-loadRoomComments();
-
+  renderRoomGallery(); renderRoomTracks(); renderRoomEmojis(); renderRoomComments();
   window.scrollTo(0,0);
 }
 function openCommunity(){
@@ -570,11 +473,11 @@ function openCommunity(){
   document.getElementById('hub').style.display='none';
   document.getElementById('room').style.display='none';
   document.getElementById('community-page').style.display='block';
-  renderCommEmojis();renderCommStories();
+  renderCommEmojis(); renderCommStories();
   window.scrollTo(0,0);
 }
 function goHub(){
-  player.pause();playingIdx=-1;
+  player.pause(); playingIdx=-1;
   document.getElementById('now-playing').style.display='none';
   document.getElementById('room').style.display='none';
   document.getElementById('community-page').style.display='none';
@@ -582,25 +485,18 @@ function goHub(){
   window.scrollTo(0,0);
 }
 
-/* ══ 갤러리 ══ */
 function renderRoomGallery(){
-  const photos = ROOMS[currentRoom].dates?.[currentDateIdx]?.photos || [];
+  const photos=ROOMS[currentRoom].photos;
   const el=document.getElementById('room-gallery');
   if(!photos.length){el.innerHTML='';return;}
   el.innerHTML=photos.map((p,i)=>`
     <div class="gallery-item" onclick="openLightbox(${i})">
-      <img src="${p.src}" alt="${p.alt}" loading="lazy"
-           onerror="this.parentElement.style.background='#FFE4CC';this.style.display='none'">
+      <img src="${p.src}" alt="${p.alt}" loading="lazy" onerror="this.parentElement.style.background='#FFE4CC';this.style.display='none'">
     </div>`).join('');
 }
-function openLightbox(idx){
-  lbIdx = idx;
-  const photos = ROOMS[currentRoom].dates?.[currentDateIdx]?.photos || [];
-  document.getElementById('lb-img').src = photos[idx].src;
-  document.getElementById('lightbox').classList.add('open');
-}
+function openLightbox(idx){lbIdx=idx;document.getElementById('lb-img').src=ROOMS[currentRoom].photos[idx].src;document.getElementById('lightbox').classList.add('open');}
 function closeLightbox(){document.getElementById('lightbox').classList.remove('open');}
-function navLightbox(dir){const p = ROOMS[currentRoom].dates?.[currentDateIdx]?.photos || [];lbIdx=(lbIdx+dir+p.length)%p.length;document.getElementById('lb-img').src=p[lbIdx].src;}
+function navLightbox(dir){const p=ROOMS[currentRoom].photos;lbIdx=(lbIdx+dir+p.length)%p.length;document.getElementById('lb-img').src=p[lbIdx].src;}
 document.getElementById('lightbox').addEventListener('click',function(e){if(e.target===this)closeLightbox();});
 document.addEventListener('keydown',e=>{
   if(!document.getElementById('lightbox').classList.contains('open'))return;
@@ -609,7 +505,6 @@ document.addEventListener('keydown',e=>{
   if(e.key==='Escape')closeLightbox();
 });
 
-/* ══ 오디오 ══ */
 const player=new Audio();
 function fmtTime(s){if(isNaN(s))return'0:00';return Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0');}
 player.addEventListener('timeupdate',()=>{
@@ -625,7 +520,7 @@ player.addEventListener('ended',()=>{playingIdx=-1;renderRoomTracks();document.g
 function seekTrack(val){if(player.duration)player.currentTime=(val/100)*player.duration;}
 
 function renderRoomTracks(){
-  const tracks = ROOMS[currentRoom].dates?.[currentDateIdx]?.tracks || [];
+  const tracks=ROOMS[currentRoom].tracks;
   const el=document.getElementById('room-tracks');
   if(!tracks.length){el.innerHTML='<p style="font-size:13px;color:var(--text-light);text-align:center;padding:1rem 0">준비 중이에요 🎵</p>';return;}
   el.innerHTML=tracks.map((t,i)=>`
@@ -637,9 +532,7 @@ function renderRoomTracks(){
         <div class="track-desc">${t.desc}${t.author?' · '+t.author:''}</div>
       </div>
       <span class="track-dur">${t.duration}</span>
-      <a class="dl-btn${downloadedSet.has(currentRoom+'-'+i)?' done':''}"
-         href="${t.file}" download="${t.name}.mp3"
-         onclick="event.stopPropagation();markDownloaded(${i})">
+      <a class="dl-btn${downloadedSet.has(currentRoom+'-'+i)?' done':''}" href="${t.file}" download="${t.name}.mp3" onclick="event.stopPropagation();markDownloaded(${i})">
         ${downloadedSet.has(currentRoom+'-'+i)
           ?'<svg viewBox="0 0 14 14"><polyline points="2,7 5.5,10.5 12,4"/></svg>'
           :'<svg viewBox="0 0 14 14"><line x1="7" y1="1" x2="7" y2="9"/><polyline points="4,6.5 7,9.5 10,6.5"/><line x1="2" y1="12" x2="12" y2="12"/></svg>'}
@@ -652,6 +545,7 @@ function renderRoomTracks(){
     </div>`).join('');
 }
 function playTrack(idx){
+  const tracks=ROOMS[currentRoom].tracks;
   if(playingIdx===idx){
     if(player.paused){player.play().catch(()=>{});playingIdx=idx;}
     else{player.pause();playingIdx=-1;}
@@ -662,10 +556,9 @@ function playTrack(idx){
     document.getElementById('np-cur').textContent='0:00';
   }
   renderRoomTracks();
-const np = document.getElementById('now-playing');
-
-if(playingIdx>=0){
-  np.style.display='flex';
+  const np=document.getElementById('now-playing');
+  if(playingIdx>=0){
+    np.style.display='flex';
     document.getElementById('np-thumb').textContent=tracks[idx].emoji;
     document.getElementById('np-name').textContent=tracks[idx].name;
     document.getElementById('np-sub').textContent=tracks[idx].author||'재생 중';
@@ -673,7 +566,17 @@ if(playingIdx>=0){
 }
 function markDownloaded(i){downloadedSet.add(currentRoom+'-'+i);setTimeout(()=>renderRoomTracks(),400);}
 
-/* ══ 작업실 리액션 ══ */
+/* ══ 댓글 삭제 ══ */
+async function deleteComment(id){
+  if(!confirm('댓글을 삭제할까요?')) return;
+  const { error } = await supabaseClient
+    .from('nicu_comments')
+    .delete()
+    .eq('id', id);
+  if(error){ alert('삭제 실패 😢'); return; }
+  loadRoomComments();
+}
+
 function renderRoomEmojis(){
   document.getElementById('room-emojis').innerHTML=ROOMS[currentRoom].emojis.map((item,i)=>`
     <button class="emoji-btn${roomActiveEmojis.has(i)?' active':''}" onclick="toggleRoomEmoji(${i})">
@@ -692,101 +595,30 @@ function addRoomHeart(){
   document.getElementById('room-heart-count').textContent='❤️ '+ROOMS[currentRoom].heartCount;
 }
 
-/* ══ 작업실 댓글 ══ */
 function renderRoomComments(){
-  const comments = ROOMS[currentRoom].dates?.[currentDateIdx]?.comments || [];
-  const el = document.getElementById('room-comment-list');
-
-  if(!comments.length){
-    el.innerHTML = '<div class="list-empty">첫 번째 메시지를 남겨주세요 🌸</div>';
-    return;
-  }
-
+  const comments=ROOMS[currentRoom].comments;
+  const el=document.getElementById('room-comment-list');
+  if(!comments.length){el.innerHTML='<div class="list-empty">첫 번째 메시지를 남겨주세요 🌸</div>';return;}
   const colors=['#FFE4CC','#FFD6E8','#D4E8D0','#D6E4FF','#FFE8D4'];
-
-  el.innerHTML = comments.map((c,i)=>`
+  el.innerHTML=comments.map((c,i)=>`
     <div class="comment-item">
       <div class="c-avatar" style="background:${colors[i%colors.length]}">${c.avatar}</div>
-      <div>
-        <div class="c-name">${c.name}</div>
-        <div class="c-text">${c.text}</div>
-        <div class="c-time">
-  ${c.time}
-  <button onclick="deleteComment('${c.id}')"
-    style="margin-left:8px;border:none;background:transparent;cursor:pointer;font-size:13px;">
-    🗑
-  </button>
-</div>
-      </div>
-    </div>
-  `).join('');
+      <div><div class="c-name">${c.name}</div><div class="c-text">${c.text}</div><div class="c-time">${c.time}</div></div>
+    </div>`).join('');
 }
-
-async function addRoomComment(){  
-  const t=document.getElementById('room-comment-input');
-  const n=document.getElementById('room-name-input');
-
-  const text=t.value.trim();
-  if(!text){t.focus();return;}
-
+function addRoomComment(){
+  const t=document.getElementById('room-comment-input'),n=document.getElementById('room-name-input');
+  const text=t.value.trim();if(!text){t.focus();return;}
   const av=['🌷','🌸','🌹','🌺','🌻','🌼','💐'];
-  const avatar=av[Math.floor(Math.random()*av.length)];
-  const name=n.value.trim()||'익명의 방문자';
-
-  const { error } = await supabaseClient
-    .from('nicu_comments')
-    .insert({
-      room_idx: currentRoom,
-      date_idx: currentDateIdx,
-      name,
-      text,
-      avatar
-    });
-
-  if(error){
-    alert('댓글 저장 실패 😢');
-    console.log(error);
-    return;
-  }
-
-  t.value='';
-  n.value='';
-
-  loadRoomComments();
+  ROOMS[currentRoom].comments.unshift({avatar:av[Math.floor(Math.random()*av.length)],name:n.value.trim()||'익명의 방문자',text,time:'방금 전'});
+  t.value='';n.value='';renderRoomComments();
 }
 
-async function loadRoomComments(){
-  const { data, error } = await supabaseClient
-    .from('nicu_comments')
-    .select('*')
-    .eq('room_idx', currentRoom)
-    .eq('date_idx', currentDateIdx)
-    .order('created_at', { ascending: false });
-
-  if(error){
-    console.log(error);
-    return;
-  }
-
-  const targetDate = ROOMS[currentRoom].dates[currentDateIdx];
-  targetDate.comments = data.map(c => ({
-  id: c.id,
-  avatar: c.avatar,
-  name: c.name,
-  text: c.text,
-  time: new Date(c.created_at).toLocaleString()
-}));
-
-  renderRoomComments();
-}
-  function renderCommEmojis(){
-  document.getElementById('comm-emojis').innerHTML = COMM.emojis.map((item,i)=>`
+function renderCommEmojis(){
+  document.getElementById('comm-emojis').innerHTML=COMM.emojis.map((item,i)=>`
     <button class="emoji-btn${commActiveEmojis.has(i)?' active':''}" onclick="toggleCommEmoji(${i})">
-      <span class="emo">${item.e}</span>
-      <span>${item.label}</span>
-      <span class="emoji-count">${item.count}</span>
-    </button>
-  `).join('');
+      <span class="emo">${item.e}</span><span>${item.label}</span><span class="emoji-count">${item.count}</span>
+    </button>`).join('');
 }
 function toggleCommEmoji(i){
   if(commActiveEmojis.has(i)){commActiveEmojis.delete(i);COMM.emojis[i].count--;}
@@ -812,56 +644,54 @@ function renderCommStories(){
   el.innerHTML=COMM.stories.map((s,i)=>`
     <div class="story-item">
       <div class="c-avatar" style="background:${colors[i%colors.length]}">${s.avatar}</div>
-      <div>
+      <div style="flex:1">
         <span class="story-badge ${s.type==='news'?'badge-news':'badge-cheer'}">${s.type==='news'?'🎉 퇴원소식':'💪 응원해요'}</span>
-        <div class="c-name">${s.name}</div><div class="c-text">${s.text}</div><div class="c-time">${s.time}</div>
+        <div class="c-name">${s.name}</div><div class="c-text">${s.text}</div>
+        <div class="c-time">${s.time}<button onclick="deleteCommStory('${s.id}')" style="margin-left:8px;border:none;background:transparent;cursor:pointer;font-size:13px;">🗑</button></div>
       </div>
     </div>`).join('');
 }
-function addCommStory(){
+async function addCommStory(){
   const t=document.getElementById('comm-comment-input'),n=document.getElementById('comm-name-input');
   const text=t.value.trim();if(!text){t.focus();return;}
   const av=['🌷','🌸','🌹','🌺','🌻','🌼','💐','🌈','⭐','🎀'];
-  COMM.stories.unshift({avatar:av[Math.floor(Math.random()*av.length)],name:n.value.trim()||'익명의 방문자',text,time:'방금 전',type:selectedType});
-  t.value='';n.value='';renderCommStories();
-}
-  function renderDateTabs(){
-  const dates = ROOMS[currentRoom].dates || [];
-  const el = document.getElementById('date-tabs');
+  const avatar=av[Math.floor(Math.random()*av.length)];
+  const name=n.value.trim()||'익명의 방문자';
 
-  if(!dates.length){
-    el.innerHTML = '';
-    return;
-  }
+  const { error } = await supabaseClient
+    .from('nicu_community')
+    .insert({ name, text, avatar, type: selectedType });
 
-  el.innerHTML = dates.map((d,i)=>`
-    <button onclick="selectDate(${i})"
-      style="
-        flex-shrink:0;
-        border:1.5px solid ${currentDateIdx===i ? '#C97B7B' : 'rgba(200,160,140,.25)'};
-        background:${currentDateIdx===i ? '#FFF0E8' : '#fff'};
-        color:#3D2B1F;
-        border-radius:20px;
-        padding:8px 14px;
-        font-family:'Noto Sans KR',sans-serif;
-        font-size:12px;
-      ">
-      ${d.label}
-    </button>
-  `).join('');
+  if(error){ alert('저장 실패 😢'); console.log(error); return; }
+  t.value=''; n.value='';
+  loadCommStories();
 }
 
-function selectDate(i){
-  currentDateIdx = i;
-  playingIdx = -1;
-  player.pause();
-  document.getElementById('now-playing').style.display='none';
+async function loadCommStories(){
+  const { data, error } = await supabaseClient
+    .from('nicu_community')
+    .select('*')
+    .order('created_at', { ascending: false });
+  if(error){ console.log(error); return; }
+  COMM.stories = data.map(s => ({
+    id: s.id,
+    avatar: s.avatar,
+    name: s.name,
+    text: s.text,
+    time: new Date(s.created_at).toLocaleString('ko-KR', {month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'}),
+    type: s.type
+  }));
+  renderCommStories();
+}
 
-  renderDateTabs();
-  renderRoomGallery();
-  renderRoomTracks();
-
-  loadRoomComments();
+async function deleteCommStory(id){
+  if(!confirm('삭제할까요?')) return;
+  const { error } = await supabaseClient
+    .from('nicu_community')
+    .delete()
+    .eq('id', id);
+  if(error){ alert('삭제 실패 😢'); return; }
+  loadCommStories();
 }
 </script>
 </body>
