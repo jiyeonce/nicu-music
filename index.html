@@ -720,9 +720,10 @@ async function toggleRoomEmoji(i){
     .eq('date_idx', currentDateIdx);
 
   if(error){
-    console.log(error);
-    return;
-  }
+  console.log(error);
+  renderRoomEmojis();
+  return;
+}
 
   ROOMS[currentRoom].emojis.forEach(e => e.count = 0);
 
