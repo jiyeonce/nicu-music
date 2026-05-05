@@ -26,8 +26,6 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--cream);color:var(--t
 .gate-error.show{display:block}
 #landing{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1.5rem 1rem 2rem;position:relative;text-align:center;background:linear-gradient(160deg,#FFF8F0 0%,#FFE8D8 50%,#FFD6E8 100%);overflow:hidden}
 #landing::before{content:'';position:absolute;inset:0;pointer-events:none;background-image:radial-gradient(circle at 20% 20%,rgba(255,200,180,.3) 0%,transparent 50%),radial-gradient(circle at 80% 80%,rgba(180,220,210,.3) 0%,transparent 50%)}
-
-
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(1.3)}}
 .note-float{position:absolute;font-size:16px;opacity:0;animation:floatNote 4s ease-in-out infinite;pointer-events:none}
 @keyframes floatNote{0%{opacity:0;transform:translateY(0) rotate(-10deg)}20%{opacity:.7}80%{opacity:.4}100%{opacity:0;transform:translateY(-55px) rotate(10deg)}}
@@ -266,7 +264,6 @@ h1 span{color:var(--dusty-pink)}
     <div class="section-label">📅 날짜 선택</div>
     <div id="date-tabs" style="display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch;scrollbar-width:none"></div>
   </div>
-
   <div class="section">
     <div class="section-label">📷 우리의 순간들</div>
     <div class="gallery-grid" id="room-gallery"></div>
@@ -371,8 +368,11 @@ h1 span{color:var(--dusty-pink)}
 const SUPABASE_URL = 'https://aopuodrdxrulobwpfzfk.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvcHVvZHJkeHJ1bG9id3BmemZrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcyNjI3MzMsImV4cCI6MjA5MjgzODczM30.c5YufG71Zr3DZw8jzwfQvXZ6m4XiTQ160s-e26sdF7o';
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
 /* ══════════════════════════════════════════
    ★ 데이터 설정 — 여기만 수정하면 돼요 ★
+   날짜 비밀번호: password 필드에 설정
+   비밀번호 없애려면: password: '' 로 두면 바로 열려요
 ══════════════════════════════════════════ */
 const ROOMS = [
   {
@@ -381,12 +381,12 @@ const ROOMS = [
     dates: [
       {
         label: '4/1',
+        password: '0401',
         photos: [
           { src:'images/nicu-image01.jpg', alt:'자장가 만들기01' },
           { src:'images/nicu-image02.jpg', alt:'자장가 만들기02' },
           { src:'images/nicu-image03.jpg', alt:'자장가 만들기03' },
           { src:'images/nicu-image04.jpg', alt:'자장가 만들기04' },
-          // 사진 추가: { src:'images/파일명.jpg', alt:'설명' },
         ],
         tracks: [
           { emoji:'⭐', name:'작은별(4명)',  file:'audio/twinkle.mp3'  },
@@ -394,26 +394,19 @@ const ROOMS = [
           { emoji:'⭐', name:'ㅅㅇㅎ자장가', file:'audio/mother02.mp3' },
           { emoji:'⭐', name:'ㅇㅅㅎ자장가', file:'audio/mother03.mp3' },
           { emoji:'⭐', name:'ㅇㅇㄹ자장가', file:'audio/mother04.mp3' },
-          // 트랙 추가: { emoji:'⭐', name:'곡 제목', file:'audio/파일명.mp3' },
         ],
       },
       {
         label: '7/1',
-        photos: [
-          // 사진 추가: { src:'images/파일명.jpg', alt:'설명' },
-        ],
-        tracks: [
-          // 트랙 추가: { emoji:'⭐', name:'곡 제목', file:'audio/파일명.mp3' },
-        ],
+        password: '0701',
+        photos: [],
+        tracks: [],
       },
       {
         label: '10/7',
-        photos: [
-          // 사진 추가: { src:'images/파일명.jpg', alt:'설명' },
-        ],
-        tracks: [
-          // 트랙 추가: { emoji:'⭐', name:'곡 제목', file:'audio/파일명.mp3' },
-        ],
+        password: '1007',
+        photos: [],
+        tracks: [],
       },
     ],
     heartCount:0, emojis:[{e:'😢',label:'뭉클해요',count:0},{e:'🥰',label:'사랑스러워요',count:0},{e:'💪',label:'힘이 나요',count:0},{e:'🌟',label:'아름다워요',count:0}], comments:[],
@@ -424,30 +417,21 @@ const ROOMS = [
     dates: [
       {
         label: '5/6',
-        photos: [
-          // 사진 추가: { src:'images/파일명.jpg', alt:'설명' },
-        ],
-        tracks: [
-          // 트랙 추가: { emoji:'🎠', name:'곡 제목', file:'audio/파일명.mp3' },
-        ],
+        password: '0506',
+        photos: [],
+        tracks: [],
       },
       {
         label: '8/5',
-        photos: [
-          // 사진 추가: { src:'images/파일명.jpg', alt:'설명' },
-        ],
-        tracks: [
-          // 트랙 추가: { emoji:'🎠', name:'곡 제목', file:'audio/파일명.mp3' },
-        ],
+        password: '0805',
+        photos: [],
+        tracks: [],
       },
       {
         label: '11/4',
-        photos: [
-          // 사진 추가: { src:'images/파일명.jpg', alt:'설명' },
-        ],
-        tracks: [
-          // 트랙 추가: { emoji:'🎠', name:'곡 제목', file:'audio/파일명.mp3' },
-        ],
+        password: '1104',
+        photos: [],
+        tracks: [],
       },
     ],
     heartCount:0, emojis:[{e:'😢',label:'뭉클해요',count:0},{e:'🥰',label:'사랑스러워요',count:0},{e:'💪',label:'힘이 나요',count:0},{e:'🌟',label:'아름다워요',count:0}], comments:[],
@@ -458,30 +442,21 @@ const ROOMS = [
     dates: [
       {
         label: '6/10',
-        photos: [
-          // 사진 추가: { src:'images/파일명.jpg', alt:'설명' },
-        ],
-        tracks: [
-          // 트랙 추가: { emoji:'📖', name:'곡 제목', file:'audio/파일명.mp3' },
-        ],
+        password: '0610',
+        photos: [],
+        tracks: [],
       },
       {
         label: '9/2',
-        photos: [
-          // 사진 추가: { src:'images/파일명.jpg', alt:'설명' },
-        ],
-        tracks: [
-          // 트랙 추가: { emoji:'📖', name:'곡 제목', file:'audio/파일명.mp3' },
-        ],
+        password: '0902',
+        photos: [],
+        tracks: [],
       },
       {
         label: '12/2',
-        photos: [
-          // 사진 추가: { src:'images/파일명.jpg', alt:'설명' },
-        ],
-        tracks: [
-          // 트랙 추가: { emoji:'📖', name:'곡 제목', file:'audio/파일명.mp3' },
-        ],
+        password: '1202',
+        photos: [],
+        tracks: [],
       },
     ],
     heartCount:0, emojis:[{e:'😢',label:'뭉클해요',count:0},{e:'🥰',label:'사랑스러워요',count:0},{e:'💪',label:'힘이 나요',count:0},{e:'🌟',label:'아름다워요',count:0}], comments:[],
@@ -494,10 +469,8 @@ const COMM = {
   stories:[],
 };
 
-/* ══ 비밀번호 ══ */
 const PASSCODE = 'nicu';
 
-/* ══ 상태 ══ */
 let currentRoom=0, playingIdx=-1, currentDateIdx=0;
 let roomActiveEmojis=new Set(), commActiveEmojis=new Set();
 let selectedType='cheer', lbIdx=0, bgmPlaying=false;
@@ -518,8 +491,6 @@ function checkPassword(){
   }
 }
 try{if(sessionStorage.getItem('nicu_auth')==='1')document.getElementById('gate').style.display='none';}catch(e){}
-
-
 
 function toggleBGM(){
   const a=document.getElementById('bgm'),b=document.getElementById('bgm-toggle');
@@ -569,6 +540,128 @@ function goHub(){
 
 function currentPhotos(){ return ROOMS[currentRoom].dates[currentDateIdx]?.photos || []; }
 function currentTracks(){ return ROOMS[currentRoom].dates[currentDateIdx]?.tracks || []; }
+
+/* ══ 날짜탭 ══ */
+function renderDateTabs(){
+  const dates=ROOMS[currentRoom].dates||[];
+  const el=document.getElementById('date-tabs');
+  if(!dates.length){el.innerHTML='';return;}
+  el.innerHTML=dates.map((d,i)=>`
+    <button onclick="selectDate(${i})" style="
+      flex-shrink:0;padding:7px 16px;border-radius:20px;cursor:pointer;
+      font-family:'Noto Sans KR',sans-serif;font-size:12px;transition:all .2s;
+      border:1.5px solid ${currentDateIdx===i?'#C97B7B':'rgba(200,160,140,.25)'};
+      background:${currentDateIdx===i?'#FFF0E8':'#fff'};
+      color:${currentDateIdx===i?'#3D2B1F':'#A08070'};
+      font-weight:${currentDateIdx===i?'500':'400'};
+    ">${d.label} ${d.password?'🔒':''}</button>`).join('');
+}
+
+/* ══ 날짜 선택 — 비밀번호 체크 포함 ══ */
+function selectDate(i){
+  const date = ROOMS[currentRoom].dates[i];
+  const pw = date.password;
+  if(!pw){
+    currentDateIdx = i;
+    applyDateChange();
+    return;
+  }
+  const authKey = `auth_r${currentRoom}_d${i}`;
+  if(sessionStorage.getItem(authKey) === '1'){
+    currentDateIdx = i;
+    applyDateChange();
+    return;
+  }
+  showDateModal(i, pw, authKey);
+}
+
+function applyDateChange(){
+  playingIdx = -1;
+  player.pause();
+  document.getElementById('now-playing').style.display = 'none';
+  renderDateTabs();
+  renderRoomGallery();
+  renderRoomTracks();
+  loadRoomReactions();
+  loadRoomComments();
+}
+
+function showDateModal(dateIdx, pw, authKey){
+  const existing = document.getElementById('date-modal');
+  if(existing) existing.remove();
+
+  const modal = document.createElement('div');
+  modal.id = 'date-modal';
+  modal.style.cssText = `
+    position:fixed;inset:0;z-index:400;
+    background:rgba(30,15,10,.6);backdrop-filter:blur(6px);
+    display:flex;align-items:center;justify-content:center;padding:1.5rem;
+  `;
+  modal.innerHTML = `
+    <div style="background:#fff;border-radius:24px;padding:2rem 1.8rem;
+      width:min(320px,88vw);text-align:center;
+      box-shadow:0 8px 40px rgba(201,123,123,.18);
+      border:1px solid rgba(200,160,140,.2);">
+      <div style="font-size:32px;margin-bottom:.8rem">🔒</div>
+      <div style="font-family:'Noto Serif KR',serif;font-size:1.1rem;color:#3D2B1F;margin-bottom:.3rem">
+        ${ROOMS[currentRoom].dates[dateIdx].label} 세션
+      </div>
+      <div style="font-size:12px;color:#A08070;margin-bottom:1.4rem;line-height:1.7">
+        참여하신 분들만 입장할 수 있어요
+      </div>
+      <input id="date-pw-input" type="password"
+        style="width:100%;border:1.5px solid rgba(200,160,140,.3);border-radius:12px;
+          padding:11px 16px;font-size:16px;text-align:center;letter-spacing:4px;
+          outline:none;background:#FFF8F0;color:#3D2B1F;margin-bottom:.8rem;
+          font-family:'Noto Sans KR',sans-serif;-webkit-appearance:none;box-sizing:border-box;"
+        placeholder="· · · ·" maxlength="10">
+      <div id="date-pw-error" style="font-size:12px;color:#C97B7B;margin-bottom:.8rem;display:none">
+        코드가 맞지 않아요 🌸
+      </div>
+      <button onclick="confirmDatePw(${dateIdx},'${pw}','${authKey}')"
+        style="width:100%;background:linear-gradient(135deg,#C97B7B,#E8A89A);
+          color:#fff;border:none;border-radius:12px;padding:12px;
+          font-family:'Noto Sans KR',sans-serif;font-size:14px;font-weight:500;
+          cursor:pointer;min-height:48px;margin-bottom:.6rem;box-sizing:border-box;">
+        입장하기 →
+      </button>
+      <button onclick="document.getElementById('date-modal').remove()"
+        style="width:100%;background:transparent;border:1.5px solid rgba(200,160,140,.25);
+          border-radius:12px;padding:10px;font-family:'Noto Sans KR',sans-serif;
+          font-size:13px;color:#A08070;cursor:pointer;min-height:44px;box-sizing:border-box;">
+        취소
+      </button>
+    </div>
+  `;
+  document.body.appendChild(modal);
+
+  setTimeout(()=>{
+    const input = document.getElementById('date-pw-input');
+    if(input){
+      input.focus();
+      input.addEventListener('keydown', e=>{
+        if(e.key === 'Enter') confirmDatePw(dateIdx, pw, authKey);
+      });
+    }
+  }, 50);
+}
+
+function confirmDatePw(dateIdx, pw, authKey){
+  const input = document.getElementById('date-pw-input');
+  const err = document.getElementById('date-pw-error');
+  if(!input) return;
+  if(input.value === pw){
+    try{ sessionStorage.setItem(authKey, '1'); }catch(e){}
+    document.getElementById('date-modal').remove();
+    currentDateIdx = dateIdx;
+    applyDateChange();
+  } else {
+    err.style.display = 'block';
+    input.value = '';
+    input.focus();
+    setTimeout(()=>{ err.style.display = 'none'; }, 2500);
+  }
+}
 
 function renderRoomGallery(){
   const photos=currentPhotos();
@@ -654,52 +747,12 @@ function playTrack(idx){
 }
 function markDownloaded(i){downloadedSet.add(currentRoom+'-'+i);setTimeout(()=>renderRoomTracks(),400);}
 
-/* ══ 날짜탭 ══ */
-function renderDateTabs(){
-  const dates=ROOMS[currentRoom].dates||[];
-  const el=document.getElementById('date-tabs');
-  if(!dates.length){el.innerHTML='';return;}
-  el.innerHTML=dates.map((d,i)=>`
-    <button onclick="selectDate(${i})" style="
-      flex-shrink:0;padding:7px 16px;border-radius:20px;cursor:pointer;
-      font-family:'Noto Sans KR',sans-serif;font-size:12px;transition:all .2s;
-      border:1.5px solid ${currentDateIdx===i?'#C97B7B':'rgba(200,160,140,.25)'};
-      background:${currentDateIdx===i?'#FFF0E8':'#fff'};
-      color:${currentDateIdx===i?'#3D2B1F':'#A08070'};
-      font-weight:${currentDateIdx===i?'500':'400'};
-    ">${d.label}</button>`).join('');
-}
-
-function selectDate(i){
-  currentDateIdx=i;
-  playingIdx=-1;
-  player.pause();
-  document.getElementById('now-playing').style.display='none';
-  renderDateTabs();
-  renderRoomGallery();
-  renderRoomTracks();
-  loadRoomReactions();
-  loadRoomComments();
-}
-
-/* ══ 댓글 삭제 ══ */
-async function deleteComment(id){
-  if(!confirm('댓글을 삭제할까요?')) return;
-  const { error } = await supabaseClient
-    .from('nicu_comments')
-    .delete()
-    .eq('id', id);
-  if(error){ alert('삭제 실패 😢'); return; }
-  loadRoomComments();
-}
-
 function renderRoomEmojis(){
   document.getElementById('room-emojis').innerHTML=ROOMS[currentRoom].emojis.map((item,i)=>`
     <button class="emoji-btn${roomActiveEmojis.has(i)?' active':''}" onclick="toggleRoomEmoji(${i})">
       <span class="emo">${item.e}</span><span>${item.label}</span><span class="emoji-count">${item.count}</span>
     </button>`).join('');
 }
-
 async function toggleRoomEmoji(i){
   const label = ROOMS[currentRoom].emojis[i].label;
   const { error } = await supabaseClient
@@ -708,7 +761,6 @@ async function toggleRoomEmoji(i){
   if(error){ console.error('emoji error:', error); return; }
   loadRoomReactions();
 }
-
 async function addRoomHeart(){
   const btn=document.getElementById('room-heart-btn');
   btn.classList.add('boom');setTimeout(()=>btn.classList.remove('boom'),380);
@@ -718,7 +770,6 @@ async function addRoomHeart(){
   if(error){ console.error('heart error:', error); return; }
   loadRoomReactions();
 }
-
 async function loadRoomReactions(){
   const { data, error } = await supabaseClient
     .from('nicu_reactions')
@@ -727,7 +778,6 @@ async function loadRoomReactions(){
     .eq('room_idx', currentRoom)
     .eq('date_idx', currentDateIdx);
   if(error){ console.log(error); renderRoomEmojis(); return; }
-
   ROOMS[currentRoom].emojis.forEach(e => e.count = 0);
   let heartCount = 0;
   data.forEach(r => {
@@ -739,15 +789,13 @@ async function loadRoomReactions(){
   document.getElementById('room-heart-count').textContent = '❤️ ' + heartCount;
   renderRoomEmojis();
 }
-
 function renderRoomComments(){
   const comments=ROOMS[currentRoom].comments;
   const el=document.getElementById('room-comment-list');
   if(!comments.length){el.innerHTML='<div class="list-empty">첫 번째 메시지를 남겨주세요 🌸</div>';return;}
   const colors=['#FFE4CC','#FFD6E8','#D4E8D0','#D6E4FF','#FFE8D4'];
-  el.innerHTML=comments.map((c,i)=>{
-    const safeId=c.id;
-    return `<div class="comment-item">
+  el.innerHTML=comments.map((c,i)=>`
+    <div class="comment-item">
       <div class="c-avatar" style="background:${colors[i%colors.length]}">${c.avatar}</div>
       <div style="flex:1">
         <div class="c-name">${c.name}</div>
@@ -756,12 +804,16 @@ function renderRoomComments(){
           <button data-id="${c.id}" class="del-comment-btn" style="margin-left:8px;border:none;background:transparent;cursor:pointer;font-size:13px;">🗑</button>
         </div>
       </div>
-    </div>`;
-  }).join('');
-  // 이벤트 바인딩
+    </div>`).join('');
   document.querySelectorAll('.del-comment-btn').forEach(btn=>{
     btn.addEventListener('click', ()=>deleteComment(btn.dataset.id));
   });
+}
+async function deleteComment(id){
+  if(!confirm('댓글을 삭제할까요?')) return;
+  const { error } = await supabaseClient.from('nicu_comments').delete().eq('id', id);
+  if(error){ alert('삭제 실패 😢'); return; }
+  loadRoomComments();
 }
 async function addRoomComment(){
   const t=document.getElementById('room-comment-input'),n=document.getElementById('room-name-input');
@@ -769,16 +821,13 @@ async function addRoomComment(){
   const av=['🌷','🌸','🌹','🌺','🌻','🌼','💐'];
   const avatar=av[Math.floor(Math.random()*av.length)];
   const name=n.value.trim()||'익명의 방문자';
-
   const { error } = await supabaseClient
     .from('nicu_comments')
     .insert({ room_idx: currentRoom, date_idx: currentDateIdx, name, text, avatar });
-
   if(error){ alert('저장 실패 😢'); console.log(error); return; }
   t.value=''; n.value='';
   loadRoomComments();
 }
-
 async function loadRoomComments(){
   const { data, error } = await supabaseClient
     .from('nicu_comments')
@@ -786,14 +835,9 @@ async function loadRoomComments(){
     .eq('room_idx', currentRoom)
     .eq('date_idx', currentDateIdx)
     .order('created_at', { ascending: false });
-
   if(error){ console.log(error); return; }
-
   ROOMS[currentRoom].comments = data.map(c => ({
-    id: c.id,
-    avatar: c.avatar,
-    name: c.name,
-    text: c.text,
+    id: c.id, avatar: c.avatar, name: c.name, text: c.text,
     time: new Date(c.created_at).toLocaleString('ko-KR', {month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'})
   }));
   renderRoomComments();
@@ -807,40 +851,27 @@ function renderCommEmojis(){
 }
 async function toggleCommEmoji(i){
   const label = COMM.emojis[i].label;
-  console.log('emoji clicked:', label, 'active:', commActiveEmojis.has(i));
   if(commActiveEmojis.has(i)){
     commActiveEmojis.delete(i);
-    const { error } = await supabaseClient.from('nicu_reactions')
-      .delete().eq('type','community').eq('key', label);
+    const { error } = await supabaseClient.from('nicu_reactions').delete().eq('type','community').eq('key', label);
     if(error) console.error('emoji delete error:', error);
   } else {
     commActiveEmojis.add(i);
-    const { data, error } = await supabaseClient.from('nicu_reactions')
-      .insert({ type:'community', key: label });
-    console.log('insert result:', data, error);
+    const { error } = await supabaseClient.from('nicu_reactions').insert({ type:'community', key: label });
     if(error) console.error('emoji insert error:', error);
   }
   loadCommReactions();
 }
-
 async function addCommHeart(){
   const btn=document.getElementById('comm-heart-btn');
   btn.classList.add('boom');setTimeout(()=>btn.classList.remove('boom'),380);
-  const { data, error } = await supabaseClient.from('nicu_reactions')
-    .insert({ type:'community', key:'heart' });
-  console.log('heart insert:', data, error);
+  const { error } = await supabaseClient.from('nicu_reactions').insert({ type:'community', key:'heart' });
   if(error) console.error('heart error:', error);
   loadCommReactions();
 }
-
 async function loadCommReactions(){
-  const { data, error } = await supabaseClient
-    .from('nicu_reactions')
-    .select('key')
-    .eq('type','community');
+  const { data, error } = await supabaseClient.from('nicu_reactions').select('key').eq('type','community');
   if(error){ console.log(error); return; }
-
-  // 이모지 카운트
   COMM.emojis.forEach(e => e.count = 0);
   let heartCount = 0;
   data.forEach(r => {
@@ -883,39 +914,24 @@ async function addCommStory(){
   const av=['🌷','🌸','🌹','🌺','🌻','🌼','💐','🌈','⭐','🎀'];
   const avatar=av[Math.floor(Math.random()*av.length)];
   const name=n.value.trim()||'익명의 방문자';
-
-  const { error } = await supabaseClient
-    .from('nicu_community')
-    .insert({ name, text, avatar, type: selectedType });
-
+  const { error } = await supabaseClient.from('nicu_community').insert({ name, text, avatar, type: selectedType });
   if(error){ alert('저장 실패 😢'); console.log(error); return; }
   t.value=''; n.value='';
   loadCommStories();
 }
-
 async function loadCommStories(){
-  const { data, error } = await supabaseClient
-    .from('nicu_community')
-    .select('*')
-    .order('created_at', { ascending: false });
+  const { data, error } = await supabaseClient.from('nicu_community').select('*').order('created_at', { ascending: false });
   if(error){ console.log(error); return; }
   COMM.stories = data.map(s => ({
-    id: s.id,
-    avatar: s.avatar,
-    name: s.name,
-    text: s.text,
+    id: s.id, avatar: s.avatar, name: s.name, text: s.text,
     time: new Date(s.created_at).toLocaleString('ko-KR', {month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'}),
     type: s.type
   }));
   renderCommStories();
 }
-
 async function deleteCommStory(id){
   if(!confirm('삭제할까요?')) return;
-  const { error } = await supabaseClient
-    .from('nicu_community')
-    .delete()
-    .eq('id', id);
+  const { error } = await supabaseClient.from('nicu_community').delete().eq('id', id);
   if(error){ alert('삭제 실패 😢'); return; }
   loadCommStories();
 }
