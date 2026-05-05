@@ -151,6 +151,28 @@ h1 span{color:var(--dusty-pink)}
 .story-badge{display:inline-block;font-size:10px;padding:2px 8px;border-radius:10px;margin-bottom:4px;font-weight:500}
 .badge-cheer{background:#FFF0E8;color:#C97B7B}
 .badge-news{background:#E8F8F0;color:#5B9B8E}
+
+/* ══ 잠금 블러 ══ */
+.locked-wrap{position:relative;border-radius:16px;overflow:hidden}
+.locked-wrap .lock-overlay{
+  position:absolute;inset:0;z-index:10;
+  background:rgba(255,248,240,.82);
+  backdrop-filter:blur(6px);
+  -webkit-backdrop-filter:blur(6px);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:8px;cursor:pointer;border-radius:16px;
+  transition:background .2s;
+}
+.locked-wrap .lock-overlay:active{background:rgba(255,240,232,.9)}
+.lock-overlay .lock-icon{font-size:28px}
+.lock-overlay .lock-msg{font-size:12px;color:var(--text-mid);font-family:'Noto Sans KR',sans-serif;text-align:center;line-height:1.6}
+.lock-overlay .lock-btn{
+  background:linear-gradient(135deg,#C97B7B,#E8A89A);
+  color:#fff;border:none;border-radius:20px;
+  padding:7px 20px;font-size:12px;
+  font-family:'Noto Sans KR',sans-serif;
+  cursor:pointer;margin-top:4px;
+}
 </style>
 </head>
 <body>
@@ -266,7 +288,9 @@ h1 span{color:var(--dusty-pink)}
   </div>
   <div class="section">
     <div class="section-label">📷 우리의 순간들</div>
-    <div class="gallery-grid" id="room-gallery"></div>
+    <div class="locked-wrap" id="gallery-wrap">
+      <div class="gallery-grid" id="room-gallery"></div>
+    </div>
   </div>
   <div id="lightbox">
     <button class="lb-close" onclick="closeLightbox()">✕</button>
@@ -276,32 +300,38 @@ h1 span{color:var(--dusty-pink)}
   </div>
   <div class="section" style="padding-top:.4rem">
     <div class="section-label">🎼 트랙 리스트</div>
-    <div id="room-tracks"></div>
+    <div class="locked-wrap" id="tracks-wrap">
+      <div id="room-tracks"></div>
+    </div>
   </div>
   <div class="section" style="padding-top:.4rem">
-    <div class="reactions-box">
-      <div class="box-title">REACT · 함께 느껴요</div>
-      <div class="emoji-row" id="room-emojis"></div>
-      <div class="heart-area">
-        <button class="heart-btn" id="room-heart-btn" onclick="addRoomHeart()">❤️</button>
-        <span class="heart-count" id="room-heart-count">❤️ 0</span>
+    <div class="locked-wrap" id="reactions-wrap">
+      <div class="reactions-box">
+        <div class="box-title">REACT · 함께 느껴요</div>
+        <div class="emoji-row" id="room-emojis"></div>
+        <div class="heart-area">
+          <button class="heart-btn" id="room-heart-btn" onclick="addRoomHeart()">❤️</button>
+          <span class="heart-count" id="room-heart-count">❤️ 0</span>
+        </div>
       </div>
     </div>
   </div>
   <div class="section" style="padding-top:.4rem;padding-bottom:1.5rem">
-    <div class="comments-box">
-      <div class="box-title">💬 메시지 남기기</div>
-      <div class="comment-input-wrap">
-        <div class="comment-avatar">🌷</div>
-        <div class="input-col">
-          <div class="name-input-row">
-            <input class="name-input" id="room-name-input" type="text" placeholder="이름 (예: 지수엄마)" maxlength="20">
+    <div class="locked-wrap" id="comments-wrap">
+      <div class="comments-box">
+        <div class="box-title">💬 메시지 남기기</div>
+        <div class="comment-input-wrap">
+          <div class="comment-avatar">🌷</div>
+          <div class="input-col">
+            <div class="name-input-row">
+              <input class="name-input" id="room-name-input" type="text" placeholder="이름 (예: 지수엄마)" maxlength="20">
+            </div>
+            <textarea class="comment-input" id="room-comment-input" rows="2" placeholder="따뜻한 말을 남겨주세요..."></textarea>
+            <button class="comment-submit" onclick="addRoomComment()">남기기 ↑</button>
           </div>
-          <textarea class="comment-input" id="room-comment-input" rows="2" placeholder="따뜻한 말을 남겨주세요..."></textarea>
-          <button class="comment-submit" onclick="addRoomComment()">남기기 ↑</button>
         </div>
+        <div id="room-comment-list"></div>
       </div>
-      <div id="room-comment-list"></div>
     </div>
   </div>
   <div class="now-playing" id="now-playing">
@@ -557,22 +587,42 @@ function renderDateTabs(){
     ">${d.label} ${d.password?'🔒':''}</button>`).join('');
 }
 
-/* ══ 날짜 선택 — 비밀번호 체크 포함 ══ */
+function isDateUnlocked(roomIdx, dateIdx){
+  const date = ROOMS[roomIdx].dates[dateIdx];
+  if(!date || !date.password) return true;
+  try{ return sessionStorage.getItem(`auth_r${roomIdx}_d${dateIdx}`) === '1'; }catch(e){ return false; }
+}
+
+function renderLockOverlay(wrapId, dateIdx){
+  const wrap = document.getElementById(wrapId);
+  if(!wrap) return;
+  const old = wrap.querySelector('.lock-overlay');
+  if(old) old.remove();
+  if(isDateUnlocked(currentRoom, dateIdx)) return;
+  const label = ROOMS[currentRoom].dates[dateIdx].label;
+  const pw = ROOMS[currentRoom].dates[dateIdx].password;
+  const authKey = `auth_r${currentRoom}_d${dateIdx}`;
+  const overlay = document.createElement('div');
+  overlay.className = 'lock-overlay';
+  overlay.innerHTML = `
+    <div class="lock-icon">🔒</div>
+    <div class="lock-msg">${label} 세션 참여자만<br>볼 수 있어요</div>
+    <button class="lock-btn">코드 입력하기</button>
+  `;
+  overlay.addEventListener('click', ()=> showDateModal(dateIdx, pw, authKey));
+  wrap.appendChild(overlay);
+}
+
+function renderAllLockOverlays(){
+  ['gallery-wrap','tracks-wrap','reactions-wrap','comments-wrap'].forEach(id=>{
+    renderLockOverlay(id, currentDateIdx);
+  });
+}
+
+/* ══ 날짜 선택 — 탭 클릭 시 바로 전환 후 잠금 오버레이 표시 ══ */
 function selectDate(i){
-  const date = ROOMS[currentRoom].dates[i];
-  const pw = date.password;
-  if(!pw){
-    currentDateIdx = i;
-    applyDateChange();
-    return;
-  }
-  const authKey = `auth_r${currentRoom}_d${i}`;
-  if(sessionStorage.getItem(authKey) === '1'){
-    currentDateIdx = i;
-    applyDateChange();
-    return;
-  }
-  showDateModal(i, pw, authKey);
+  currentDateIdx = i;
+  applyDateChange();
 }
 
 function applyDateChange(){
@@ -584,6 +634,7 @@ function applyDateChange(){
   renderRoomTracks();
   loadRoomReactions();
   loadRoomComments();
+  renderAllLockOverlays();
 }
 
 function showDateModal(dateIdx, pw, authKey){
@@ -654,8 +705,7 @@ function confirmDatePw(dateIdx, pw, authKey){
     try{ sessionStorage.setItem(authKey, '1'); }catch(e){}
     document.getElementById('date-modal').remove();
     currentDateIdx = dateIdx;
-    applyDateChange();
-  } else {
+    applyDateChange();  } else {
     err.style.display = 'block';
     input.value = '';
     input.focus();
