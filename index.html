@@ -151,29 +151,6 @@ h1 span{color:var(--dusty-pink)}
 .story-badge{display:inline-block;font-size:10px;padding:2px 8px;border-radius:10px;margin-bottom:4px;font-weight:500}
 .badge-cheer{background:#FFF0E8;color:#C97B7B}
 .badge-news{background:#E8F8F0;color:#5B9B8E}
-
-/* ══ 잠금 블러 ══ */
-.locked-wrap{position:relative;border-radius:16px;}
-.locked-wrap .lock-overlay{
-  position:absolute;inset:0;z-index:10;
-  background:rgba(255,248,240,.92);
-  backdrop-filter:blur(8px);
-  -webkit-backdrop-filter:blur(8px);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:8px;cursor:pointer;border-radius:16px;
-  min-height:80px;
-  transition:background .2s;
-}
-.locked-wrap .lock-overlay:active{background:rgba(255,240,232,.96)}
-.lock-overlay .lock-icon{font-size:28px}
-.lock-overlay .lock-msg{font-size:12px;color:var(--text-mid);font-family:'Noto Sans KR',sans-serif;text-align:center;line-height:1.6}
-.lock-overlay .lock-btn{
-  background:linear-gradient(135deg,#C97B7B,#E8A89A);
-  color:#fff;border:none;border-radius:20px;
-  padding:7px 20px;font-size:12px;
-  font-family:'Noto Sans KR',sans-serif;
-  cursor:pointer;margin-top:4px;
-}
 </style>
 </head>
 <body>
@@ -292,28 +269,22 @@ h1 span{color:var(--dusty-pink)}
     <div style="font-family:'Noto Serif KR',serif;font-size:1rem;color:var(--text-dark);margin-bottom:.4rem">날짜를 선택해주세요</div>
     <div style="font-size:12px;color:var(--text-light);line-height:1.8">위의 날짜 탭을 눌러<br>세션 내용을 확인하세요 🎵</div>
   </div>
-
   <div id="room-content" style="display:none">
-  <div class="section">
-    <div class="section-label">📷 우리의 순간들</div>
-    <div class="locked-wrap" id="gallery-wrap">
+    <div class="section">
+      <div class="section-label">📷 우리의 순간들</div>
       <div class="gallery-grid" id="room-gallery"></div>
     </div>
-  </div>
-  <div id="lightbox">
-    <button class="lb-close" onclick="closeLightbox()">✕</button>
-    <button class="lb-nav lb-prev" onclick="navLightbox(-1)">‹</button>
-    <img id="lb-img" src="" alt="사진">
-    <button class="lb-nav lb-next" onclick="navLightbox(1)">›</button>
-  </div>
-  <div class="section" style="padding-top:.4rem">
-    <div class="section-label">🎼 트랙 리스트</div>
-    <div class="locked-wrap" id="tracks-wrap">
+    <div id="lightbox">
+      <button class="lb-close" onclick="closeLightbox()">✕</button>
+      <button class="lb-nav lb-prev" onclick="navLightbox(-1)">‹</button>
+      <img id="lb-img" src="" alt="사진">
+      <button class="lb-nav lb-next" onclick="navLightbox(1)">›</button>
+    </div>
+    <div class="section" style="padding-top:.4rem">
+      <div class="section-label">🎼 트랙 리스트</div>
       <div id="room-tracks"></div>
     </div>
-  </div>
-  <div class="section" style="padding-top:.4rem">
-    <div class="locked-wrap" id="reactions-wrap">
+    <div class="section" style="padding-top:.4rem">
       <div class="reactions-box">
         <div class="box-title">REACT · 함께 느껴요</div>
         <div class="emoji-row" id="room-emojis"></div>
@@ -323,9 +294,7 @@ h1 span{color:var(--dusty-pink)}
         </div>
       </div>
     </div>
-  </div>
-  <div class="section" style="padding-top:.4rem;padding-bottom:1.5rem">
-    <div class="locked-wrap" id="comments-wrap">
+    <div class="section" style="padding-top:.4rem;padding-bottom:1.5rem">
       <div class="comments-box">
         <div class="box-title">💬 메시지 남기기</div>
         <div class="comment-input-wrap">
@@ -341,7 +310,6 @@ h1 span{color:var(--dusty-pink)}
         <div id="room-comment-list"></div>
       </div>
     </div>
-  </div>
   </div>
   <div class="now-playing" id="now-playing">
     <div class="np-top">
@@ -419,8 +387,7 @@ const ROOMS = [
     sub:   '아가에게 전하는 자장가 모음',
     dates: [
       {
-        label: '4/1',
-        password: '0401',
+        label: '4/1', password: '0401',
         photos: [
           { src:'images/nicu-image01.jpg', alt:'자장가 만들기01' },
           { src:'images/nicu-image02.jpg', alt:'자장가 만들기02' },
@@ -435,18 +402,8 @@ const ROOMS = [
           { emoji:'⭐', name:'ㅇㅇㄹ자장가', file:'audio/mother04.mp3' },
         ],
       },
-      {
-        label: '7/1',
-        password: '0701',
-        photos: [],
-        tracks: [],
-      },
-      {
-        label: '10/7',
-        password: '1007',
-        photos: [],
-        tracks: [],
-      },
+      { label:'7/1',  password:'0701',  photos:[], tracks:[] },
+      { label:'10/7', password:'1007',  photos:[], tracks:[] },
     ],
     heartCount:0, emojis:[{e:'😢',label:'뭉클해요',count:0},{e:'🥰',label:'사랑스러워요',count:0},{e:'💪',label:'힘이 나요',count:0},{e:'🌟',label:'아름다워요',count:0}], comments:[],
   },
@@ -455,8 +412,7 @@ const ROOMS = [
     sub:   '아가를 위한 음악모빌 소리',
     dates: [
       {
-        label: '5/6',
-        password: '0506',
+        label: '5/6', password: '0506',
         photos: [
           { src:'images/nicu-image05.jpg', alt:'음악모빌 만들기01' },
           { src:'images/nicu-image06.jpg', alt:'음악모빌 만들기02' },
@@ -470,18 +426,8 @@ const ROOMS = [
           { emoji:'⭐', name:'엄마아빠의 노래', file:'audio/mother08.mp3' },
         ],
       },
-      {
-        label: '8/5',
-        password: '0805',
-        photos: [],
-        tracks: [],
-      },
-      {
-        label: '11/4',
-        password: '1104',
-        photos: [],
-        tracks: [],
-      },
+      { label:'8/5',  password:'0805',  photos:[], tracks:[] },
+      { label:'11/4', password:'1104',  photos:[], tracks:[] },
     ],
     heartCount:0, emojis:[{e:'😢',label:'뭉클해요',count:0},{e:'🥰',label:'사랑스러워요',count:0},{e:'💪',label:'힘이 나요',count:0},{e:'🌟',label:'아름다워요',count:0}], comments:[],
   },
@@ -490,8 +436,7 @@ const ROOMS = [
     sub:   '함께 읽는 소리 그림책',
     dates: [
       {
-        label: '6/10',
-        password: '0610',
+        label: '6/10', password: '0610',
         photos: [
           { src:'images/nicu-image09.jpg', alt:'사운드북 만들기01' },
           { src:'images/nicu-image10.jpg', alt:'사운드북 만들기02' },
@@ -499,7 +444,7 @@ const ROOMS = [
           { src:'images/nicu-image12.jpg', alt:'사운드북 만들기04' },
           { src:'images/nicu-image13.jpg', alt:'사운드북 만들기05' },
           { src:'images/nicu-image14.jpg', alt:'사운드북 만들기06' },
-          { src:'images/nicu-image15.jpg', alt:'사운드북 만들기07 },
+          { src:'images/nicu-image15.jpg', alt:'사운드북 만들기07' },
           { src:'images/nicu-image16.jpg', alt:'사운드북 만들기08' },
         ],
         tracks: [
@@ -509,18 +454,8 @@ const ROOMS = [
           { emoji:'⭐', name:'이준 엄마 사운드북', file:'audio/mother12.mp3' },
         ],
       },
-      {
-        label: '9/2',
-        password: '0902',
-        photos: [],
-        tracks: [],
-      },
-      {
-        label: '12/2',
-        password: '1202',
-        photos: [],
-        tracks: [],
-      },
+      { label:'9/2',  password:'0902',  photos:[], tracks:[] },
+      { label:'12/2', password:'1202',  photos:[], tracks:[] },
     ],
     heartCount:0, emojis:[{e:'😢',label:'뭉클해요',count:0},{e:'🥰',label:'사랑스러워요',count:0},{e:'💪',label:'힘이 나요',count:0},{e:'🌟',label:'아름다워요',count:0}], comments:[],
   },
@@ -533,8 +468,7 @@ const COMM = {
 };
 
 const PASSCODE = 'nicu';
-
-let currentRoom=0, playingIdx=-1, currentDateIdx=0;
+let currentRoom=0, playingIdx=-1, currentDateIdx=-1;
 let roomActiveEmojis=new Set(), commActiveEmojis=new Set();
 let selectedType='cheer', lbIdx=0, bgmPlaying=false;
 const downloadedSet=new Set();
@@ -569,12 +503,11 @@ function openHub(){
   window.scrollTo(0,0);
 }
 function openRoom(idx){
-  currentRoom=idx; playingIdx=-1; roomActiveEmojis=new Set();
+  currentRoom=idx; playingIdx=-1; roomActiveEmojis=new Set(); currentDateIdx=-1;
   document.getElementById('now-playing').style.display='none';
   document.getElementById('hub').style.display='none';
   document.getElementById('room').style.display='block';
   document.getElementById('community-page').style.display='none';
-  currentDateIdx = -1;
   document.getElementById('room-title').textContent=ROOMS[idx].title;
   document.getElementById('room-sub').textContent=ROOMS[idx].sub;
   document.getElementById('room-heart-count').textContent='❤️ 0';
@@ -606,14 +539,19 @@ function goHub(){
 function currentPhotos(){ return ROOMS[currentRoom].dates[currentDateIdx]?.photos || []; }
 function currentTracks(){ return ROOMS[currentRoom].dates[currentDateIdx]?.tracks || []; }
 
-/* ══ 날짜탭 ══ */
+function isDateUnlocked(roomIdx, dateIdx){
+  const date = ROOMS[roomIdx].dates[dateIdx];
+  if(!date || !date.password) return true;
+  try{ return sessionStorage.getItem(`auth_r${roomIdx}_d${dateIdx}`) === '1'; }catch(e){ return false; }
+}
+
 function renderDateTabs(){
   const dates=ROOMS[currentRoom].dates||[];
   const el=document.getElementById('date-tabs');
   if(!dates.length){el.innerHTML='';return;}
   el.innerHTML=dates.map((d,i)=>{
-    const unlocked = isDateUnlocked(currentRoom, i);
-    const isActive = currentDateIdx===i && currentDateIdx !== -1;
+    const unlocked=isDateUnlocked(currentRoom,i);
+    const isActive=currentDateIdx===i;
     return `<button onclick="selectDate(${i})" style="
       flex-shrink:0;padding:7px 16px;border-radius:20px;cursor:pointer;
       font-family:'Noto Sans KR',sans-serif;font-size:12px;transition:all .2s;
@@ -621,33 +559,25 @@ function renderDateTabs(){
       background:${isActive?'#FFF0E8':unlocked?'#fff':'#F5F0EC'};
       color:${isActive?'#3D2B1F':unlocked?'#A08070':'#C8B0A0'};
       font-weight:${isActive?'500':'400'};
-    ">${d.label} ${d.password&&!unlocked?'🔒':''}</button>`;
+    ">${d.label}${d.password&&!unlocked?' 🔒':''}</button>`;
   }).join('');
 }
 
-function isDateUnlocked(roomIdx, dateIdx){
-  const date = ROOMS[roomIdx].dates[dateIdx];
-  if(!date || !date.password) return true;
-  try{ return sessionStorage.getItem(`auth_r${roomIdx}_d${dateIdx}`) === '1'; }catch(e){ return false; }
-}
-
-/* ══ 날짜 선택 — 잠긴 날짜면 모달 먼저, 맞아야 진입 ══ */
 function selectDate(i){
-  if(isDateUnlocked(currentRoom, i)){
-    currentDateIdx = i;
+  if(isDateUnlocked(currentRoom,i)){
+    currentDateIdx=i;
     applyDateChange();
   } else {
-    const date = ROOMS[currentRoom].dates[i];
+    const date=ROOMS[currentRoom].dates[i];
     showDateModal(i, date.password, `auth_r${currentRoom}_d${i}`);
   }
 }
 
 function applyDateChange(){
-  playingIdx = -1;
-  player.pause();
-  document.getElementById('now-playing').style.display = 'none';
-  document.getElementById('room-select-prompt').style.display = 'none';
-  document.getElementById('room-content').style.display = 'block';
+  playingIdx=-1; player.pause();
+  document.getElementById('now-playing').style.display='none';
+  document.getElementById('room-select-prompt').style.display='none';
+  document.getElementById('room-content').style.display='block';
   renderDateTabs();
   renderRoomGallery();
   renderRoomTracks();
@@ -656,86 +586,53 @@ function applyDateChange(){
 }
 
 function showDateModal(dateIdx, pw, authKey){
-  const existing = document.getElementById('date-modal');
+  const existing=document.getElementById('date-modal');
   if(existing) existing.remove();
-
-  const modal = document.createElement('div');
-  modal.id = 'date-modal';
-  modal.style.cssText = `
-    position:fixed;inset:0;z-index:400;
-    background:rgba(30,15,10,.6);backdrop-filter:blur(6px);
-    display:flex;align-items:center;justify-content:center;padding:1.5rem;
-  `;
-  modal.innerHTML = `
-    <div style="background:#fff;border-radius:24px;padding:2rem 1.8rem;
-      width:min(320px,88vw);text-align:center;
-      box-shadow:0 8px 40px rgba(201,123,123,.18);
-      border:1px solid rgba(200,160,140,.2);">
+  const modal=document.createElement('div');
+  modal.id='date-modal';
+  modal.style.cssText=`position:fixed;inset:0;z-index:400;background:rgba(30,15,10,.6);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:1.5rem;`;
+  modal.innerHTML=`
+    <div style="background:#fff;border-radius:24px;padding:2rem 1.8rem;width:min(320px,88vw);text-align:center;box-shadow:0 8px 40px rgba(201,123,123,.18);border:1px solid rgba(200,160,140,.2);">
       <div style="font-size:32px;margin-bottom:.8rem">🔒</div>
-      <div style="font-family:'Noto Serif KR',serif;font-size:1.1rem;color:#3D2B1F;margin-bottom:.3rem">
-        ${ROOMS[currentRoom].dates[dateIdx].label} 세션
-      </div>
-      <div style="font-size:12px;color:#A08070;margin-bottom:1.4rem;line-height:1.7">
-        참여하신 분들만 입장할 수 있어요
-      </div>
+      <div style="font-family:'Noto Serif KR',serif;font-size:1.1rem;color:#3D2B1F;margin-bottom:.3rem">${ROOMS[currentRoom].dates[dateIdx].label} 세션</div>
+      <div style="font-size:12px;color:#A08070;margin-bottom:1.4rem;line-height:1.7">참여하신 분들만 입장할 수 있어요</div>
       <input id="date-pw-input" type="password"
-        style="width:100%;border:1.5px solid rgba(200,160,140,.3);border-radius:12px;
-          padding:11px 16px;font-size:16px;text-align:center;letter-spacing:4px;
-          outline:none;background:#FFF8F0;color:#3D2B1F;margin-bottom:.8rem;
-          font-family:'Noto Sans KR',sans-serif;-webkit-appearance:none;box-sizing:border-box;"
+        style="width:100%;border:1.5px solid rgba(200,160,140,.3);border-radius:12px;padding:11px 16px;font-size:16px;text-align:center;letter-spacing:4px;outline:none;background:#FFF8F0;color:#3D2B1F;margin-bottom:.8rem;font-family:'Noto Sans KR',sans-serif;-webkit-appearance:none;box-sizing:border-box;"
         placeholder="· · · ·" maxlength="10">
-      <div id="date-pw-error" style="font-size:12px;color:#C97B7B;margin-bottom:.8rem;display:none">
-        코드가 맞지 않아요 🌸
-      </div>
+      <div id="date-pw-error" style="font-size:12px;color:#C97B7B;margin-bottom:.8rem;display:none">코드가 맞지 않아요 🌸</div>
       <button onclick="confirmDatePw(${dateIdx},'${pw}','${authKey}')"
-        style="width:100%;background:linear-gradient(135deg,#C97B7B,#E8A89A);
-          color:#fff;border:none;border-radius:12px;padding:12px;
-          font-family:'Noto Sans KR',sans-serif;font-size:14px;font-weight:500;
-          cursor:pointer;min-height:48px;margin-bottom:.6rem;box-sizing:border-box;">
+        style="width:100%;background:linear-gradient(135deg,#C97B7B,#E8A89A);color:#fff;border:none;border-radius:12px;padding:12px;font-family:'Noto Sans KR',sans-serif;font-size:14px;font-weight:500;cursor:pointer;min-height:48px;margin-bottom:.6rem;box-sizing:border-box;">
         입장하기 →
       </button>
       <button onclick="document.getElementById('date-modal').remove()"
-        style="width:100%;background:transparent;border:1.5px solid rgba(200,160,140,.25);
-          border-radius:12px;padding:10px;font-family:'Noto Sans KR',sans-serif;
-          font-size:13px;color:#A08070;cursor:pointer;min-height:44px;box-sizing:border-box;">
+        style="width:100%;background:transparent;border:1.5px solid rgba(200,160,140,.25);border-radius:12px;padding:10px;font-family:'Noto Sans KR',sans-serif;font-size:13px;color:#A08070;cursor:pointer;min-height:44px;box-sizing:border-box;">
         취소
       </button>
-    </div>
-  `;
+    </div>`;
   document.body.appendChild(modal);
-
   setTimeout(()=>{
-    const input = document.getElementById('date-pw-input');
-    if(input){
-      input.focus();
-      input.addEventListener('keydown', e=>{
-        if(e.key === 'Enter') confirmDatePw(dateIdx, pw, authKey);
-      });
-    }
-  }, 50);
+    const input=document.getElementById('date-pw-input');
+    if(input){ input.focus(); input.addEventListener('keydown',e=>{ if(e.key==='Enter') confirmDatePw(dateIdx,pw,authKey); }); }
+  },50);
 }
 
 function confirmDatePw(dateIdx, pw, authKey){
-  const input = document.getElementById('date-pw-input');
-  const err = document.getElementById('date-pw-error');
+  const input=document.getElementById('date-pw-input');
+  const err=document.getElementById('date-pw-error');
   if(!input) return;
-  if(input.value === pw){
-    try{ sessionStorage.setItem(authKey, '1'); }catch(e){}
+  if(input.value===pw){
+    try{ sessionStorage.setItem(authKey,'1'); }catch(e){}
     document.getElementById('date-modal').remove();
-    currentDateIdx = dateIdx;
-    applyDateChange();} else {
-    err.style.display = 'block';
-    input.value = '';
-    input.focus();
-    setTimeout(()=>{ err.style.display = 'none'; }, 2500);
+    currentDateIdx=dateIdx;
+    applyDateChange();
+  } else {
+    err.style.display='block';
+    input.value=''; input.focus();
+    setTimeout(()=>{ err.style.display='none'; },2500);
   }
 }
 
 function renderRoomGallery(){
-  if(!isDateUnlocked(currentRoom, currentDateIdx)){
-    document.getElementById('room-gallery').innerHTML='';
-    return;
-  }
   const photos=currentPhotos();
   const el=document.getElementById('room-gallery');
   if(!photos.length){el.innerHTML='<p style="font-size:13px;color:var(--text-light);text-align:center;padding:1rem 0;grid-column:1/-1">사진이 없어요 📷</p>';return;}
@@ -773,10 +670,6 @@ player.addEventListener('ended',()=>{playingIdx=-1;renderRoomTracks();document.g
 function seekTrack(val){if(player.duration)player.currentTime=(val/100)*player.duration;}
 
 function renderRoomTracks(){
-  if(!isDateUnlocked(currentRoom, currentDateIdx)){
-    document.getElementById('room-tracks').innerHTML='';
-    return;
-  }
   const tracks=currentTracks();
   const el=document.getElementById('room-tracks');
   if(!tracks.length){el.innerHTML='<p style="font-size:13px;color:var(--text-light);text-align:center;padding:1rem 0">준비 중이에요 🎵</p>';return;}
@@ -830,41 +723,31 @@ function renderRoomEmojis(){
     </button>`).join('');
 }
 async function toggleRoomEmoji(i){
-  const label = ROOMS[currentRoom].emojis[i].label;
-  const { error } = await supabaseClient
-    .from('nicu_reactions')
-    .insert({ type:'room', room_idx:currentRoom, date_idx:currentDateIdx, key:label });
-  if(error){ console.error('emoji error:', error); return; }
+  const label=ROOMS[currentRoom].emojis[i].label;
+  const { error }=await supabaseClient.from('nicu_reactions').insert({type:'room',room_idx:currentRoom,date_idx:currentDateIdx,key:label});
+  if(error){ console.error('emoji error:',error); return; }
   loadRoomReactions();
 }
 async function addRoomHeart(){
   const btn=document.getElementById('room-heart-btn');
   btn.classList.add('boom');setTimeout(()=>btn.classList.remove('boom'),380);
-  const { error } = await supabaseClient
-    .from('nicu_reactions')
-    .insert({ type:'room', room_idx:currentRoom, date_idx:currentDateIdx, key:'heart' });
-  if(error){ console.error('heart error:', error); return; }
+  const { error }=await supabaseClient.from('nicu_reactions').insert({type:'room',room_idx:currentRoom,date_idx:currentDateIdx,key:'heart'});
+  if(error){ console.error('heart error:',error); return; }
   loadRoomReactions();
 }
 async function loadRoomReactions(){
-  const { data, error } = await supabaseClient
-    .from('nicu_reactions')
-    .select('key')
-    .eq('type','room')
-    .eq('room_idx', currentRoom)
-    .eq('date_idx', currentDateIdx);
+  const { data,error }=await supabaseClient.from('nicu_reactions').select('key').eq('type','room').eq('room_idx',currentRoom).eq('date_idx',currentDateIdx);
   if(error){ console.log(error); renderRoomEmojis(); return; }
-  ROOMS[currentRoom].emojis.forEach(e => e.count = 0);
-  let heartCount = 0;
-  data.forEach(r => {
-    if(r.key === 'heart'){ heartCount++; return; }
-    const idx = ROOMS[currentRoom].emojis.findIndex(e => e.label === r.key);
-    if(idx >= 0) ROOMS[currentRoom].emojis[idx].count++;
+  ROOMS[currentRoom].emojis.forEach(e=>e.count=0);
+  let heartCount=0;
+  data.forEach(r=>{
+    if(r.key==='heart'){heartCount++;return;}
+    const idx=ROOMS[currentRoom].emojis.findIndex(e=>e.label===r.key);
+    if(idx>=0) ROOMS[currentRoom].emojis[idx].count++;
   });
-  ROOMS[currentRoom].heartCount = heartCount;
-  document.getElementById('room-heart-count').textContent = '❤️ ' + heartCount;
+  ROOMS[currentRoom].heartCount=heartCount;
+  document.getElementById('room-heart-count').textContent='❤️ '+heartCount;
   renderRoomEmojis();
-  renderAllLockOverlays();
 }
 function renderRoomComments(){
   const comments=ROOMS[currentRoom].comments;
@@ -883,12 +766,12 @@ function renderRoomComments(){
       </div>
     </div>`).join('');
   document.querySelectorAll('.del-comment-btn').forEach(btn=>{
-    btn.addEventListener('click', ()=>deleteComment(btn.dataset.id));
+    btn.addEventListener('click',()=>deleteComment(btn.dataset.id));
   });
 }
 async function deleteComment(id){
   if(!confirm('댓글을 삭제할까요?')) return;
-  const { error } = await supabaseClient.from('nicu_comments').delete().eq('id', id);
+  const { error }=await supabaseClient.from('nicu_comments').delete().eq('id',id);
   if(error){ alert('삭제 실패 😢'); return; }
   loadRoomComments();
 }
@@ -898,27 +781,23 @@ async function addRoomComment(){
   const av=['🌷','🌸','🌹','🌺','🌻','🌼','💐'];
   const avatar=av[Math.floor(Math.random()*av.length)];
   const name=n.value.trim()||'익명의 방문자';
-  const { error } = await supabaseClient
-    .from('nicu_comments')
-    .insert({ room_idx: currentRoom, date_idx: currentDateIdx, name, text, avatar });
+  const { error }=await supabaseClient.from('nicu_comments').insert({room_idx:currentRoom,date_idx:currentDateIdx,name,text,avatar});
   if(error){ alert('저장 실패 😢'); console.log(error); return; }
   t.value=''; n.value='';
   loadRoomComments();
 }
+function renderAllLockOverlays(){
+  // 날짜 선택 후 바로 열리므로 별도 처리 불필요 — 향후 확장용 빈 함수
+}
+
 async function loadRoomComments(){
-  const { data, error } = await supabaseClient
-    .from('nicu_comments')
-    .select('*')
-    .eq('room_idx', currentRoom)
-    .eq('date_idx', currentDateIdx)
-    .order('created_at', { ascending: false });
+  const { data,error }=await supabaseClient.from('nicu_comments').select('*').eq('room_idx',currentRoom).eq('date_idx',currentDateIdx).order('created_at',{ascending:false});
   if(error){ console.log(error); return; }
-  ROOMS[currentRoom].comments = data.map(c => ({
-    id: c.id, avatar: c.avatar, name: c.name, text: c.text,
-    time: new Date(c.created_at).toLocaleString('ko-KR', {month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'})
+  ROOMS[currentRoom].comments=data.map(c=>({
+    id:c.id, avatar:c.avatar, name:c.name, text:c.text,
+    time:new Date(c.created_at).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'})
   }));
   renderRoomComments();
-  renderAllLockOverlays();
 }
 
 function renderCommEmojis(){
@@ -928,37 +807,37 @@ function renderCommEmojis(){
     </button>`).join('');
 }
 async function toggleCommEmoji(i){
-  const label = COMM.emojis[i].label;
+  const label=COMM.emojis[i].label;
   if(commActiveEmojis.has(i)){
     commActiveEmojis.delete(i);
-    const { error } = await supabaseClient.from('nicu_reactions').delete().eq('type','community').eq('key', label);
-    if(error) console.error('emoji delete error:', error);
+    const { error }=await supabaseClient.from('nicu_reactions').delete().eq('type','community').eq('key',label);
+    if(error) console.error('emoji delete error:',error);
   } else {
     commActiveEmojis.add(i);
-    const { error } = await supabaseClient.from('nicu_reactions').insert({ type:'community', key: label });
-    if(error) console.error('emoji insert error:', error);
+    const { error }=await supabaseClient.from('nicu_reactions').insert({type:'community',key:label});
+    if(error) console.error('emoji insert error:',error);
   }
   loadCommReactions();
 }
 async function addCommHeart(){
   const btn=document.getElementById('comm-heart-btn');
   btn.classList.add('boom');setTimeout(()=>btn.classList.remove('boom'),380);
-  const { error } = await supabaseClient.from('nicu_reactions').insert({ type:'community', key:'heart' });
-  if(error) console.error('heart error:', error);
+  const { error }=await supabaseClient.from('nicu_reactions').insert({type:'community',key:'heart'});
+  if(error) console.error('heart error:',error);
   loadCommReactions();
 }
 async function loadCommReactions(){
-  const { data, error } = await supabaseClient.from('nicu_reactions').select('key').eq('type','community');
+  const { data,error }=await supabaseClient.from('nicu_reactions').select('key').eq('type','community');
   if(error){ console.log(error); return; }
-  COMM.emojis.forEach(e => e.count = 0);
-  let heartCount = 0;
-  data.forEach(r => {
-    if(r.key === 'heart'){ heartCount++; return; }
-    const idx = COMM.emojis.findIndex(e => e.label === r.key);
-    if(idx >= 0) COMM.emojis[idx].count++;
+  COMM.emojis.forEach(e=>e.count=0);
+  let heartCount=0;
+  data.forEach(r=>{
+    if(r.key==='heart'){heartCount++;return;}
+    const idx=COMM.emojis.findIndex(e=>e.label===r.key);
+    if(idx>=0) COMM.emojis[idx].count++;
   });
-  COMM.heartCount = heartCount;
-  document.getElementById('comm-heart-count').textContent = '❤️ ' + heartCount.toLocaleString();
+  COMM.heartCount=heartCount;
+  document.getElementById('comm-heart-count').textContent='❤️ '+heartCount.toLocaleString();
   renderCommEmojis();
 }
 function selectType(type){
@@ -983,7 +862,7 @@ function renderCommStories(){
       </div>
     </div>`).join('');
   document.querySelectorAll('.del-story-btn').forEach(btn=>{
-    btn.addEventListener('click', ()=>deleteCommStory(btn.dataset.id));
+    btn.addEventListener('click',()=>deleteCommStory(btn.dataset.id));
   });
 }
 async function addCommStory(){
@@ -992,24 +871,24 @@ async function addCommStory(){
   const av=['🌷','🌸','🌹','🌺','🌻','🌼','💐','🌈','⭐','🎀'];
   const avatar=av[Math.floor(Math.random()*av.length)];
   const name=n.value.trim()||'익명의 방문자';
-  const { error } = await supabaseClient.from('nicu_community').insert({ name, text, avatar, type: selectedType });
+  const { error }=await supabaseClient.from('nicu_community').insert({name,text,avatar,type:selectedType});
   if(error){ alert('저장 실패 😢'); console.log(error); return; }
   t.value=''; n.value='';
   loadCommStories();
 }
 async function loadCommStories(){
-  const { data, error } = await supabaseClient.from('nicu_community').select('*').order('created_at', { ascending: false });
+  const { data,error }=await supabaseClient.from('nicu_community').select('*').order('created_at',{ascending:false});
   if(error){ console.log(error); return; }
-  COMM.stories = data.map(s => ({
-    id: s.id, avatar: s.avatar, name: s.name, text: s.text,
-    time: new Date(s.created_at).toLocaleString('ko-KR', {month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'}),
-    type: s.type
+  COMM.stories=data.map(s=>({
+    id:s.id, avatar:s.avatar, name:s.name, text:s.text,
+    time:new Date(s.created_at).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'}),
+    type:s.type
   }));
   renderCommStories();
 }
 async function deleteCommStory(id){
   if(!confirm('삭제할까요?')) return;
-  const { error } = await supabaseClient.from('nicu_community').delete().eq('id', id);
+  const { error }=await supabaseClient.from('nicu_community').delete().eq('id',id);
   if(error){ alert('삭제 실패 😢'); return; }
   loadCommStories();
 }
