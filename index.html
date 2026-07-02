@@ -402,7 +402,22 @@ const ROOMS = [
           { emoji:'⭐', name:'ㅇㅇㄹ자장가', file:'audio/mother04.mp3' },
         ],
       },
-      { label:'7/1',  password:'0701',  photos:[], tracks:[] },
+      {
+        label: '7/1', password: '0701',
+        photos: [
+          { src:'images/nicu-image17.jpg', alt:'7월1일 01' },
+          { src:'images/nicu-image18.jpg', alt:'7월1일 02' },
+          { src:'images/nicu-image19.jpg', alt:'7월1일 03' },
+          { src:'images/nicu-image20.jpg', alt:'7월1일 04' },
+          { src:'images/nicu-video1.mp4', alt:'7월1일 영상', isVideo:true },
+        ],
+        tracks: [
+          { emoji:'⭐', name:'작은별(4명)',           file:'audio/mother13.mp3' },
+          { emoji:'⭐', name:'신수호 엄마아빠 자장가', file:'audio/mother14.mp3' },
+          { emoji:'⭐', name:'지윤찬,윤슬 엄마 자장가', file:'audio/mother15.mp3' },
+          { emoji:'⭐', name:'박해원아기 엄마아빠 자장가', file:'audio/mother16.mp3' },
+        ],
+      },
       { label:'10/7', password:'1007',  photos:[], tracks:[] },
     ],
     heartCount:0, emojis:[{e:'😢',label:'뭉클해요',count:0},{e:'🥰',label:'사랑스러워요',count:0},{e:'💪',label:'힘이 나요',count:0},{e:'🌟',label:'아름다워요',count:0}], comments:[],
@@ -636,13 +651,21 @@ function renderRoomGallery(){
   const photos=currentPhotos();
   const el=document.getElementById('room-gallery');
   if(!photos.length){el.innerHTML='<p style="font-size:13px;color:var(--text-light);text-align:center;padding:1rem 0;grid-column:1/-1">사진이 없어요 📷</p>';return;}
-  el.innerHTML=photos.map((p,i)=>`
-    <div class="gallery-item" onclick="openLightbox(${i})">
+  el.innerHTML=photos.map((p,i)=>{
+    if(p.isVideo){
+      return `<div class="gallery-item" style="position:relative;cursor:default">
+        <video src="${p.src}" style="width:100%;height:100%;object-fit:cover;display:block;" controls playsinline webkit-playsinline preload="metadata"></video>
+        <div style="position:absolute;top:5px;left:5px;background:rgba(0,0,0,.45);border-radius:8px;padding:2px 7px;font-size:10px;color:#fff;pointer-events:none">🎬</div>
+      </div>`;
+    }
+    return `<div class="gallery-item" onclick="openLightbox(${i})">
       <img src="${p.src}" alt="${p.alt}" loading="lazy" onerror="this.parentElement.style.background='#FFE4CC';this.style.display='none'">
-    </div>`).join('');
+    </div>`;
+  }).join('');
 }
 function openLightbox(idx){
   const photos=currentPhotos();
+  if(photos[idx]?.isVideo) return; // 영상은 라이트박스 열지 않음
   lbIdx=idx;document.getElementById('lb-img').src=photos[idx].src;document.getElementById('lightbox').classList.add('open');
 }
 function closeLightbox(){document.getElementById('lightbox').classList.remove('open');}
